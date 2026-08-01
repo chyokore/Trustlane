@@ -157,7 +157,7 @@ export function ApprovalPanel({
     if (process.env.NODE_ENV !== "production")
       console.info(`[TrustLane Prava] ${label}`, detail);
   };
-  const recordAttempt = (nextStatus: OrderStatus, demo = false) => {
+  const recordAttempt = (nextStatus: OrderStatus, demo = false, transactionId?: string) => {
     const attempt: CheckoutAttempt = {
       id: `${nextStatus}-${Date.now()}`,
       product: recommendation.product,
@@ -166,6 +166,8 @@ export function ApprovalPanel({
       currency: recommendation.currency,
       status: nextStatus,
       timestamp: new Date().toLocaleString(),
+      decisionLedgerId: recommendation.decisionLedgerId,
+      transactionId,
       demo,
     };
     dashboardStorage.setOrders([attempt, ...dashboardStorage.getOrders()]);
@@ -177,6 +179,7 @@ export function ApprovalPanel({
     setStatus("pending");
     setError(undefined);
     setPaymentStartedAt(new Date().toLocaleString());
+    recordAttempt("Sandbox Pending");
     try {
       const response = await fetch("/api/prava/create-session", {
         method: "POST",
@@ -229,7 +232,7 @@ export function ApprovalPanel({
             status: "succeeded",
           };
           setReceipt(confirmedReceipt);
-          recordAttempt("successful");
+          recordAttempt("Completed", false, confirmedReceipt.transactionId);
           void fetch("/api/senso/outcome", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -248,19 +251,19 @@ export function ApprovalPanel({
           destroy();
           setStatus("failed");
           setError(pravaError.message);
-          recordAttempt("failed");
+          recordAttempt("Failed");
         },
         onDismiss: () => {
           destroy();
           setStatus("cancelled");
-          recordAttempt("cancelled");
+          recordAttempt("Failed");
         },
       });
     } catch (caught) {
       diagnose("Embedded checkout error", caught);
       destroy();
       setStatus("failed");
-      recordAttempt("failed");
+      recordAttempt("Failed");
       setError(
         caught instanceof Error
           ? caught.message
@@ -283,7 +286,7 @@ export function ApprovalPanel({
       status: "preview",
     });
     setReplayOpen(false);
-    recordAttempt("preview", true);
+    recordAttempt("Sandbox Pending", true, "preview_local_only");
   };
   if (receipt)
     return (

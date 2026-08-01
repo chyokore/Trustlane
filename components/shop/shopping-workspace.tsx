@@ -9,7 +9,7 @@ import {
 import { ComparisonCard } from "@/components/shop/comparison-card";
 import { DecisionLedger } from "@/components/shop/decision-ledger";
 import { IntentCard } from "@/components/shop/intent-card";
-import { ResearchSummary } from "@/components/shop/research-summary";
+import { MerchantReport } from "@/components/verification/merchant-report";
 import { ShoppingInput } from "@/components/shop/shopping-input";
 import { dashboardStorage } from "@/lib/dashboard-storage";
 import type { AgentResult } from "@/types/agents";
@@ -207,7 +207,7 @@ export function ShoppingWorkspace() {
           <DecisionLedger context={merchantContext} loading={merchantContextLoading} research={result} />
           <ApprovalPanel context={merchantContext} recommendation={checkout} research={result} />
         </div>
-        <ResearchSummary context={merchantContext} loading={merchantContextLoading} />
+        <MerchantReport context={merchantContext} image={productImages[selected.name]} loading={merchantContextLoading} research={result} />
       </div>
     </main>
   );

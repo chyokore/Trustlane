@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, Package, ShieldCheck, Truck } from "lucide-react";
+import { Check, ShieldCheck, Truck } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import type { Product, ProductImage } from "@/types/shop";
@@ -36,9 +36,7 @@ export function ComparisonCard({
       <div className="flex items-start justify-between gap-3">
         <div>
           <h3 className="font-semibold">{product.name}</h3>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Sold by {product.merchant}
-          </p>
+          <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground"><span aria-label="Merchant mark unavailable" className="grid size-4 place-items-center rounded-full bg-primary/15 text-[8px] font-bold text-primary">{product.merchant.slice(0, 1)}</span>Sold by {product.merchant}</p>
         </div>
         <p className="text-lg font-semibold text-primary">{product.price}</p>
       </div>
@@ -69,7 +67,7 @@ export function ComparisonCard({
         </p>
         <p className="flex items-center gap-2">
           <ShieldCheck className="size-3.5 text-primary" />
-          Verified merchant and policy review
+          Senso verification checks merchant context when available
         </p>
       </div>
       <div className="mt-4 border-t border-border pt-3 text-xs">

@@ -95,3 +95,17 @@ Visa/FIDO iframe initialization is currently being tested as a sandbox or enviro
 
 - [Judge demo script](docs/demo-script.md)
 - [Submission summary](docs/submission-summary.md)
+
+## Verification Guide
+
+TrustLane exposes a reviewable proof trail for every shopping run. Open the [Live Demo](/dashboard/shop), then use [TrustLane Verify](/dashboard/verify) to inspect the Merchant Passport, Senso-returned verification sources, Decision Ledger preview, Replay Engine, and downloadable Receipt JSON for each recorded order attempt. Receipt JSON represents the local sandbox attempt state and never claims payment completion unless Prava returned a success callback.
+
+Public verification links:
+
+- [Live Demo](/dashboard/shop)
+- [Verification Center](/dashboard/verify)
+- [Merchant Passport](/dashboard/verify#passport)
+- [Replay Engine](/dashboard/verify#replay)
+- [Receipt JSON](/dashboard/verify#receipt-json)
+- [Architecture](/#architecture)
+- [Documentation](/docs)

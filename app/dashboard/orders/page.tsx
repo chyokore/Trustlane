@@ -1,1 +1,2 @@
-import { OrdersView } from "@/components/dashboard/dashboard-views"; export default function Page() { return <OrdersView />; }
+import { OrderAttempts } from "@/components/verification/order-attempts";
+export default function Page() { return <OrderAttempts />; }

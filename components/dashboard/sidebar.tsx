@@ -8,6 +8,7 @@ import {
   PackageCheck,
   ReceiptText,
   Settings,
+  ShieldCheck,
   ShoppingBag,
   X,
 } from "lucide-react";
@@ -25,6 +26,7 @@ const navigation = [
   { label: "Decision Ledger", icon: ReceiptText, href: "/dashboard/decision-ledger" },
   { label: "Orders", icon: PackageCheck, href: "/dashboard/orders" },
   { label: "Saved", icon: Bookmark, href: "/dashboard/saved" },
+  { label: "Verify", icon: ShieldCheck, href: "/dashboard/verify" },
 ];
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
