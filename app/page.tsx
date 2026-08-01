@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, BadgeCheck, ShieldCheck, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
@@ -14,6 +15,7 @@ const features = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   return (
     <main id="home" className="overflow-hidden">
       <Navbar />
@@ -23,7 +25,7 @@ export default function Home() {
           <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary"><span className="size-1.5 rounded-full bg-primary" /> Built for confident commerce</div>
           <h1 className="text-balance text-5xl font-semibold tracking-[-0.05em] sm:text-6xl lg:text-7xl">The Trust Layer for <span className="text-primary">Agentic Commerce</span></h1>
           <p className="mx-auto mt-7 max-w-2xl text-pretty text-lg leading-8 text-muted-foreground sm:text-xl">Shop with AI that explains every decision before spending your money.</p>
-          <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row"><Button asChild size="lg"><a href="#signup">Get Started <ArrowRight className="ml-2 size-4" /></a></Button><Button asChild size="lg" variant="outline"><a href="#features">Explore Demo</a></Button></div>
+          <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row"><Button onClick={() => router.push("/dashboard")} size="lg">Get Started <ArrowRight className="ml-2 size-4" /></Button><Button asChild size="lg" variant="outline"><a href="#features">Explore Demo</a></Button></div>
           <div className="mx-auto mt-16 grid max-w-3xl grid-cols-3 divide-x divide-border rounded-2xl border border-border bg-card/40 py-4 backdrop-blur-sm"><p className="text-xs text-muted-foreground">Clear reasoning</p><p className="text-xs text-muted-foreground">Verified merchants</p><p className="text-xs text-muted-foreground">You stay in control</p></div>
         </motion.div>
       </section>
