@@ -150,6 +150,7 @@ export function ShoppingWorkspace() {
   const checkout: CheckoutRecommendation = {
     merchant: selected.merchant,
     merchantUrl: "https://example.com",
+    verifiedMerchantUrl: merchantContext?.citations.find((citation) => citation.url)?.url,
     product: selected.name,
     amount: selected.price,
     currency: result?.intent.currency ?? "USD",
