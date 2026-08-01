@@ -11,7 +11,9 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { dashboardStorage } from "@/lib/dashboard-storage";
 import type { AgentResult } from "@/types/agents";
+import type { CheckoutAttempt, OrderStatus } from "@/types/dashboard-state";
 export interface CheckoutRecommendation {
   merchant: string;
   merchantUrl: string;
@@ -146,6 +148,19 @@ export function ApprovalPanel({
     if (process.env.NODE_ENV !== "production")
       console.info(`[TrustLane Prava] ${label}`, detail);
   };
+  const recordAttempt = (nextStatus: OrderStatus, demo = false) => {
+    const attempt: CheckoutAttempt = {
+      id: `${nextStatus}-${Date.now()}`,
+      product: recommendation.product,
+      merchant: recommendation.merchant,
+      amount: recommendation.amount,
+      currency: recommendation.currency,
+      status: nextStatus,
+      timestamp: new Date().toLocaleString(),
+      demo,
+    };
+    dashboardStorage.setOrders([attempt, ...dashboardStorage.getOrders()]);
+  };
   const startCheckout = async () => {
     if (loading) return;
     setLoading(true);
@@ -194,7 +209,7 @@ export function ApprovalPanel({
         onSuccess: (result) => {
           destroy();
           setStatus("succeeded");
-          setReceipt({
+          const confirmedReceipt: Receipt = {
             merchant: recommendation.merchant,
             product: recommendation.product,
             amount: recommendation.amount,
@@ -203,23 +218,39 @@ export function ApprovalPanel({
             timestamp: new Date().toLocaleString(),
             ledgerId: recommendation.decisionLedgerId,
             status: "succeeded",
-          });
+          };
+          setReceipt(confirmedReceipt);
+          recordAttempt("successful");
+          void fetch("/api/senso/outcome", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              merchant: confirmedReceipt.merchant,
+              product: confirmedReceipt.product,
+              transactionId: confirmedReceipt.transactionId,
+              ledgerId: confirmedReceipt.ledgerId,
+              timestamp: confirmedReceipt.timestamp,
+            }),
+          }).catch((outcomeError) => diagnose("Senso outcome write unavailable", outcomeError));
         },
         onError: (pravaError) => {
           diagnose("Embedded checkout failed", pravaError);
           destroy();
           setStatus("failed");
           setError(pravaError.message);
+          recordAttempt("failed");
         },
         onDismiss: () => {
           destroy();
           setStatus("cancelled");
+          recordAttempt("cancelled");
         },
       });
     } catch (caught) {
       diagnose("Embedded checkout error", caught);
       destroy();
       setStatus("failed");
+      recordAttempt("failed");
       setError(
         caught instanceof Error
           ? caught.message
@@ -242,6 +273,7 @@ export function ApprovalPanel({
       status: "preview",
     });
     setReplayOpen(false);
+    recordAttempt("preview", true);
   };
   if (receipt)
     return (

@@ -14,6 +14,7 @@ import { ShoppingInput } from "@/components/shop/shopping-input";
 import { dashboardStorage } from "@/lib/dashboard-storage";
 import type { AgentResult } from "@/types/agents";
 import type { Product } from "@/types/shop";
+import type { VerifiedMerchantContext } from "@/services/senso";
 
 const products: Product[] = [
   {
@@ -65,6 +66,8 @@ export function ShoppingWorkspace() {
   const [result, setResult] = useState<AgentResult>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
+  const [merchantContext, setMerchantContext] =
+    useState<VerifiedMerchantContext>();
   const research = async (prompt: string) => {
     setLoading(true);
     setError(undefined);
@@ -79,6 +82,23 @@ export function ShoppingWorkspace() {
         throw new Error(data.error ?? "AI research could not be completed.");
       setResult(data);
       dashboardStorage.setResearch(data);
+      void fetch("/api/senso/merchant-context", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ merchant: data.recommendedProduct.merchant }),
+      })
+        .then(async (contextResponse) => {
+          const context = (await contextResponse.json()) as VerifiedMerchantContext;
+          if (contextResponse.ok) setMerchantContext(context);
+        })
+        .catch(() => {
+          setMerchantContext({
+            merchant: data.recommendedProduct.merchant,
+            groundedAnswer: "Verified context temporarily unavailable.",
+            citations: [],
+            verificationStatus: "unavailable",
+          });
+        });
     } catch (caught) {
       setError(
         caught instanceof Error
@@ -155,10 +175,10 @@ export function ShoppingWorkspace() {
               ))}
             </div>
           </section>
-          <DecisionLedger />
+          <DecisionLedger context={merchantContext} research={result} />
           <ApprovalPanel recommendation={checkout} research={result} />
         </div>
-        <ResearchSummary />
+        <ResearchSummary context={merchantContext} />
       </div>
     </main>
   );
