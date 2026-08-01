@@ -12,6 +12,7 @@ import { IntentCard } from "@/components/shop/intent-card";
 import { MerchantReport } from "@/components/verification/merchant-report";
 import { ShoppingInput } from "@/components/shop/shopping-input";
 import { dashboardStorage } from "@/lib/dashboard-storage";
+import { resolveMerchantUrl } from "@/lib/merchant-url";
 import type { AgentResult } from "@/types/agents";
 import type { Product, ProductImage } from "@/types/shop";
 import type { VerifiedMerchantContext } from "@/services/senso";
@@ -147,10 +148,15 @@ export function ShoppingWorkspace() {
     result?.recommendedProduct ??
     products.find((product) => product.recommended) ??
     products[0];
+  const merchantResolution = resolveMerchantUrl({
+    merchant: selected.merchant,
+    citations: merchantContext?.citations,
+    structuredMerchantUrl: (selected as { merchantUrl?: unknown }).merchantUrl,
+  });
   const checkout: CheckoutRecommendation = {
     merchant: selected.merchant,
-    merchantUrl: "https://example.com",
-    verifiedMerchantUrl: merchantContext?.citations.find((citation) => citation.url)?.url,
+    merchantUrl: merchantResolution?.origin ?? "",
+    verifiedMerchantUrl: merchantResolution?.origin,
     product: selected.name,
     amount: selected.price,
     currency: result?.intent.currency ?? "USD",
@@ -205,10 +211,10 @@ export function ShoppingWorkspace() {
               ))}
             </div>
           </section>
-          <DecisionLedger context={merchantContext} loading={merchantContextLoading} research={result} />
-          <ApprovalPanel context={merchantContext} recommendation={checkout} research={result} />
+          <DecisionLedger context={merchantContext} loading={merchantContextLoading} merchantResolution={merchantResolution} research={result} />
+          <ApprovalPanel context={merchantContext} merchantResolution={merchantResolution} recommendation={checkout} research={result} />
         </div>
-        <MerchantReport context={merchantContext} image={productImages[selected.name]} loading={merchantContextLoading} research={result} />
+        <MerchantReport context={merchantContext} image={productImages[selected.name]} loading={merchantContextLoading} merchantResolution={merchantResolution} research={result} />
       </div>
     </main>
   );

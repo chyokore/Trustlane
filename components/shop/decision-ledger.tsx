@@ -5,13 +5,14 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import type { VerifiedMerchantContext } from "@/services/senso";
 import type { AgentResult } from "@/types/agents";
+import { merchantUrlSourceLabel, type MerchantUrlResolution } from "@/lib/merchant-url";
 const VerifiedSensoContext = dynamic(() => import("@/components/senso/verified-context").then((module) => module.VerifiedSensoContext));
 const reasoning = [
   "Matched the stated $1,200 budget with current verified pricing.",
   "Weighted independent repairability, warranty coverage, and low return friction.",
   "Excluded merchants with unresolved delivery or review-integrity signals.",
 ];
-export function DecisionLedger({ context, loading, research }: { context?: VerifiedMerchantContext; loading?: boolean; research?: AgentResult }) {
+export function DecisionLedger({ context, loading, merchantResolution, research }: { context?: VerifiedMerchantContext; loading?: boolean; merchantResolution?: MerchantUrlResolution; research?: AgentResult }) {
   const [open, setOpen] = useState(false);
   const ledger = research?.decisionLedger;
   const timeline = ledger?.reasoningTimeline ?? reasoning;
@@ -74,6 +75,10 @@ export function DecisionLedger({ context, loading, research }: { context?: Verif
           </div>
         </div>
         <div className="mt-4"><VerifiedSensoContext context={context} loading={loading} /></div>
+        <div className="mt-3 rounded-xl border border-border bg-background/50 p-3 text-sm">
+          <p className="font-medium">Merchant checkout evidence</p>
+          {merchantResolution ? <p className="mt-1 text-muted-foreground">Resolved from {merchantUrlSourceLabel(merchantResolution.source)}: {merchantResolution.origin} · <a className="text-primary hover:underline" href={merchantResolution.origin} rel="noreferrer" target="_blank">Visit merchant</a></p> : <p className="mt-1 text-muted-foreground">Checkout unavailable until a verified merchant URL is found.</p>}
+        </div>
         <button
           aria-expanded={open}
           aria-controls="decision-reasoning-timeline"

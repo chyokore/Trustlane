@@ -4,6 +4,7 @@ import {
   CheckCircle2,
   CircleAlert,
   Clock3,
+  ExternalLink,
   LoaderCircle,
   RotateCcw,
   SlidersHorizontal,
@@ -13,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PaymentVerificationCard, type VerificationReceipt } from "@/components/verification/payment-verification-card";
 import { dashboardStorage } from "@/lib/dashboard-storage";
+import { merchantUrlSourceLabel, type MerchantUrlResolution } from "@/lib/merchant-url";
 import type { AgentResult } from "@/types/agents";
 import type { CheckoutAttempt, OrderStatus } from "@/types/dashboard-state";
 import type { VerifiedMerchantContext } from "@/services/senso";
@@ -139,10 +141,12 @@ export function ApprovalPanel({
   recommendation,
   research,
   context,
+  merchantResolution,
 }: {
   recommendation: CheckoutRecommendation;
   research?: AgentResult;
   context?: VerifiedMerchantContext;
+  merchantResolution?: MerchantUrlResolution;
 }) {
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
@@ -153,7 +157,8 @@ export function ApprovalPanel({
   const [paymentStartedAt, setPaymentStartedAt] = useState<string>();
   const [hostedLoading, setHostedLoading] = useState(false);
   const [hostedFallback, setHostedFallback] = useState(false);
-  const [hostedError, setHostedError] = useState<{ code?: string; status?: number }>();
+  const [hostedError, setHostedError] = useState<{ message: string; code?: string; status?: number }>();
+  const checkoutEligible = Boolean(merchantResolution);
   const hostedInFlight = useRef(false);
   const sdk = useRef<PravaSDK | null>(null);
   const destroy = () => {
@@ -181,7 +186,7 @@ export function ApprovalPanel({
     dashboardStorage.setOrders([attempt, ...dashboardStorage.getOrders()]);
   };
   const startCheckout = async () => {
-    if (loading) return;
+    if (loading || !checkoutEligible) return;
     setLoading(true);
     setReady(false);
     setStatus("pending");
@@ -285,20 +290,20 @@ export function ApprovalPanel({
     }
   };
   const startHostedCheckout = async () => {
-    if (hostedLoading || loading || hostedInFlight.current) return;
+    if (hostedLoading || loading || hostedInFlight.current || !checkoutEligible) return;
     hostedInFlight.current = true;
     setHostedLoading(true);
     setHostedError(undefined);
     try {
       const response = await fetch("/api/prava/create-hosted-session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(recommendation) });
       const session = (await response.json()) as HostedSessionResponse;
-      if (!response.ok || !session.sessionId || !session.orderId || !session.iframeUrl || !session.expiresAt || !session.iframeUrl.startsWith("https://")) { setHostedError({ code: session.code ?? "hosted_checkout_unavailable", status: session.status ?? response.status }); return; }
+      if (!response.ok || !session.sessionId || !session.orderId || !session.iframeUrl || !session.expiresAt || !session.iframeUrl.startsWith("https://")) { setHostedError({ message: session.error ?? "Hosted checkout could not be created.", code: session.code ?? "hosted_checkout_unavailable", status: session.status ?? response.status }); return; }
       const createdAt = new Date().toLocaleString();
       dashboardStorage.setHostedSession({ sessionId: session.sessionId, orderId: session.orderId, merchant: recommendation.merchant, product: recommendation.product, amount: recommendation.amount, currency: recommendation.currency, decisionLedgerId: recommendation.decisionLedgerId, createdAt, expiresAt: session.expiresAt });
       const attempt: CheckoutAttempt = { id: `hosted-${session.sessionId}`, sessionId: session.sessionId, orderId: session.orderId, checkoutMode: "hosted", product: recommendation.product, merchant: recommendation.merchant, amount: recommendation.amount, currency: recommendation.currency, status: "Sandbox Pending", timestamp: createdAt, decisionLedgerId: recommendation.decisionLedgerId };
       dashboardStorage.setOrders([attempt, ...dashboardStorage.getOrders()]);
       window.location.assign(session.iframeUrl);
-    } catch { setHostedError({ code: "hosted_checkout_unavailable", status: 0 }); } finally { hostedInFlight.current = false; setHostedLoading(false); }
+    } catch { setHostedError({ message: "Hosted checkout could not be created.", code: "hosted_checkout_unavailable", status: 0 }); } finally { hostedInFlight.current = false; setHostedLoading(false); }
   };
   const preview = () => {
     if (process.env.NODE_ENV === "production") return;
@@ -384,6 +389,9 @@ export function ApprovalPanel({
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
         TrustLane will never purchase without your explicit approval.
       </p>
+      <div className={`mt-4 rounded-xl border p-3 text-sm ${checkoutEligible ? "border-primary/25 bg-primary/5" : "border-amber-400/25 bg-amber-400/10"}`}>
+        {merchantResolution ? <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-muted-foreground"><span className="font-medium text-primary">Merchant verified for checkout</span><span>· {merchantUrlSourceLabel(merchantResolution.source)}</span><a className="inline-flex items-center gap-1 text-primary hover:underline" href={merchantResolution.origin} rel="noreferrer" target="_blank">Visit merchant <ExternalLink className="size-3" /></a></p> : <><p className="font-medium text-amber-100">Checkout unavailable until a verified merchant URL is found</p><p className="mt-1 text-xs text-muted-foreground">Try naming a supported merchant, such as Best Buy, Walmart, Target, or Amazon.</p></>}
+      </div>
       <div id="prava-checkout" className="mt-4 min-h-0" />
       {loading && (
         <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
@@ -405,10 +413,10 @@ export function ApprovalPanel({
           Embedded checkout failed: {error ?? "Prava checkout failed. No payment was completed."}
         </p>
       )}
-      {hostedError && <p className="mt-3 rounded-xl border border-red-400/25 bg-red-400/10 px-3 py-2 text-sm text-red-100">Hosted checkout could not be created.<br /><span className="text-xs">Reference: {hostedError.code ?? "hosted_checkout_unavailable"}/{hostedError.status ?? 0}</span></p>}
+      {hostedError && <p className="mt-3 rounded-xl border border-red-400/25 bg-red-400/10 px-3 py-2 text-sm text-red-100">{hostedError.message}<br /><span className="text-xs">Reference: {hostedError.code ?? "hosted_checkout_unavailable"}/{hostedError.status ?? 0}</span></p>}
       {hostedFallback && <p className="mt-3 rounded-xl border border-amber-400/25 bg-amber-400/10 px-3 py-2 text-sm text-amber-100">We couldn’t complete passkey verification inside the embedded checkout. Continue securely on Prava.</p>}
       <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-        <Button disabled={loading} onClick={startCheckout}>
+        <Button disabled={loading || !checkoutEligible} onClick={startCheckout}>
           {loading ? (
             <LoaderCircle className="mr-2 size-4 animate-spin" />
           ) : (
@@ -425,7 +433,7 @@ export function ApprovalPanel({
           Reject
         </Button>
       </div>
-      <Button className="mt-3 w-full" disabled={hostedLoading || loading} onClick={startHostedCheckout} variant={hostedFallback ? "default" : "outline"}>{hostedLoading ? <LoaderCircle className="mr-2 size-4 animate-spin" /> : <CheckCircle2 className="mr-2 size-4" />}{hostedError ? "Retry Hosted Checkout" : "Open Secure Prava Checkout"}</Button>
+      <Button className="mt-3 w-full" disabled={hostedLoading || loading || !checkoutEligible} onClick={startHostedCheckout} variant={hostedFallback ? "default" : "outline"}>{hostedLoading ? <LoaderCircle className="mr-2 size-4 animate-spin" /> : <CheckCircle2 className="mr-2 size-4" />}{hostedError ? "Retry Hosted Checkout" : "Open Secure Prava Checkout"}</Button>
       {process.env.NODE_ENV !== "production" && (
         <Button className="mt-3" onClick={preview} size="sm" variant="ghost">
           <Clock3 className="mr-2 size-4" />
