@@ -3,7 +3,7 @@ import { Menu } from "lucide-react";
 import { Logo } from "@/components/common/logo";
 import { Button } from "@/components/ui/button";
 
-const navigation = ["Home", "Features", "How it Works", "About"];
+const navigation = [["Product", "#product"], ["Features", "#features"], ["How It Works", "#how-it-works"], ["Why TrustLane", "#why-trustlane"], ["Architecture", "#architecture"], ["Docs", "/docs"]] as const;
 
 export function Navbar() {
   return (
@@ -14,10 +14,10 @@ export function Navbar() {
       >
         <Logo />
         <div className="hidden items-center gap-7 md:flex">
-          {navigation.map((item) => (
+          {navigation.map(([item, href]) => (
             <a
               className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-              href={`#${item.toLowerCase().replaceAll(" ", "-")}`}
+              href={href}
               key={item}
             >
               {item}
@@ -26,10 +26,10 @@ export function Navbar() {
         </div>
         <div className="hidden items-center gap-2 sm:flex">
           <Button asChild size="sm" variant="ghost">
-            <a href="#signin">Sign In</a>
+            <a href="#auth">Sign In</a>
           </Button>
           <Button asChild size="sm">
-            <a href="#signup">Sign Up</a>
+            <a href="#auth">Sign Up</a>
           </Button>
         </div>
         <button

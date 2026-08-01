@@ -11,6 +11,7 @@ import { DecisionLedger } from "@/components/shop/decision-ledger";
 import { IntentCard } from "@/components/shop/intent-card";
 import { ResearchSummary } from "@/components/shop/research-summary";
 import { ShoppingInput } from "@/components/shop/shopping-input";
+import { dashboardStorage } from "@/lib/dashboard-storage";
 import type { AgentResult } from "@/types/agents";
 import type { Product } from "@/types/shop";
 
@@ -77,6 +78,7 @@ export function ShoppingWorkspace() {
       if (!response.ok)
         throw new Error(data.error ?? "AI research could not be completed.");
       setResult(data);
+      dashboardStorage.setResearch(data);
     } catch (caught) {
       setError(
         caught instanceof Error

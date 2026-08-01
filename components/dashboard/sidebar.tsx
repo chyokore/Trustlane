@@ -20,10 +20,10 @@ import { cn } from "@/lib/utils";
 const navigation = [
   { label: "Dashboard", icon: ChartNoAxesCombined, href: "/dashboard" },
   { label: "Shop", icon: ShoppingBag, href: "/dashboard/shop" },
-  { label: "My Agents", icon: Bot, href: "#agents" },
-  { label: "Decision Ledger", icon: ReceiptText, href: "#ledger" },
-  { label: "Orders", icon: PackageCheck, href: "#orders" },
-  { label: "Saved", icon: Bookmark, href: "#saved" },
+  { label: "My Agents", icon: Bot, href: "/dashboard/agents" },
+  { label: "Decision Ledger", icon: ReceiptText, href: "/dashboard/decision-ledger" },
+  { label: "Orders", icon: PackageCheck, href: "/dashboard/orders" },
+  { label: "Saved", icon: Bookmark, href: "/dashboard/saved" },
 ];
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
@@ -97,7 +97,7 @@ export function DashboardSidebar() {
         <div className="border-t border-border pt-4">
           <a
             className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            href="#settings"
+            href="/dashboard/settings"
           >
             <Settings className="size-[18px]" />
             Settings
