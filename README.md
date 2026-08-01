@@ -35,16 +35,18 @@ User Request → Intent Extraction → Product Research → Merchant Verificatio
 
 ```mermaid
 flowchart LR
-  U[User request] --> W[Next.js Shop Workspace]
-  W --> R[/api/research]
-  R --> O[OpenAI Responses API\nSingle structured response]
-  O --> D[Intent · Research · Merchant · Risk\nComparison · Decision Ledger]
-  D --> W
-  W --> A[Explicit approval]
-  A --> P[/api/prava/create-session]
-  P --> S[Prava Sandbox session API]
-  S --> I[Client-side Prava iframe\n@prava-sdk/core]
-  I --> T[Trust Receipt + Trust Replay]
+  user["User Request"] --> workspace["Next.js Shop Workspace"]
+  workspace --> research["/api/research"]
+  research --> openai["OpenAI Responses API"]
+  openai --> pipeline["Trust Pipeline<br/>Intent · Research · Merchant · Risk · Comparison"]
+  pipeline --> senso["Senso Verified Context"]
+  senso --> ledger["Decision Ledger"]
+  ledger --> approval["User Approval"]
+  approval --> session["/api/prava/create-session"]
+  session --> checkout["Prava Secure Embedded Checkout"]
+  checkout --> receipt["Trust Receipt"]
+  receipt --> replay["Trust Replay"]
+  receipt --> feedback["Senso Outcome Feedback<br/>after confirmed success"]
 ```
 
 | Layer | Technology |
