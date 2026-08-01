@@ -32,6 +32,7 @@ interface SessionResponse {
   publishableKey?: string;
   error?: string;
 }
+interface HostedSessionResponse { sessionId?: string; orderId?: string; iframeUrl?: string; expiresAt?: string; error?: string; }
 type PaymentStatus =
   "idle" | "pending" | "succeeded" | "failed" | "cancelled" | "preview";
 interface Receipt {
@@ -149,6 +150,8 @@ export function ApprovalPanel({
   const [receipt, setReceipt] = useState<Receipt>();
   const [replayOpen, setReplayOpen] = useState(false);
   const [paymentStartedAt, setPaymentStartedAt] = useState<string>();
+  const [hostedLoading, setHostedLoading] = useState(false);
+  const [hostedFallback, setHostedFallback] = useState(false);
   const sdk = useRef<PravaSDK | null>(null);
   const destroy = () => {
     sdk.current?.destroy();
@@ -254,6 +257,8 @@ export function ApprovalPanel({
           destroy();
           setStatus("failed");
           setError(pravaError.message);
+          const detail = pravaError.message.toLowerCase();
+          if (detail.includes("fido_start_failed") || detail.includes("verification failed") || detail.includes("passkey") || detail.includes("iframe authentication")) setHostedFallback(true);
           recordAttempt("Failed");
         },
         onDismiss: () => {
@@ -275,6 +280,21 @@ export function ApprovalPanel({
     } finally {
       setLoading(false);
     }
+  };
+  const startHostedCheckout = async () => {
+    if (hostedLoading || loading) return;
+    setHostedLoading(true);
+    setError(undefined);
+    try {
+      const response = await fetch("/api/prava/create-hosted-session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(recommendation) });
+      const session = (await response.json()) as HostedSessionResponse;
+      if (!response.ok || !session.sessionId || !session.iframeUrl) throw new Error(session.error ?? "Secure hosted checkout could not be started.");
+      const createdAt = new Date().toLocaleString();
+      dashboardStorage.setHostedSession({ sessionId: session.sessionId, orderId: session.orderId, merchant: recommendation.merchant, product: recommendation.product, amount: recommendation.amount, currency: recommendation.currency, decisionLedgerId: recommendation.decisionLedgerId, createdAt, expiresAt: session.expiresAt });
+      const attempt: CheckoutAttempt = { id: `hosted-${session.sessionId}`, sessionId: session.sessionId, orderId: session.orderId, checkoutMode: "hosted", product: recommendation.product, merchant: recommendation.merchant, amount: recommendation.amount, currency: recommendation.currency, status: "Sandbox Pending", timestamp: createdAt, decisionLedgerId: recommendation.decisionLedgerId };
+      dashboardStorage.setOrders([attempt, ...dashboardStorage.getOrders()]);
+      window.location.assign(session.iframeUrl);
+    } catch (caught) { setError(caught instanceof Error ? caught.message : "Secure hosted checkout could not be started."); } finally { setHostedLoading(false); }
   };
   const preview = () => {
     if (process.env.NODE_ENV === "production") return;
@@ -381,6 +401,7 @@ export function ApprovalPanel({
           {error ?? "Prava checkout failed. No payment was completed."}
         </p>
       )}
+      {hostedFallback && <p className="mt-3 rounded-xl border border-amber-400/25 bg-amber-400/10 px-3 py-2 text-sm text-amber-100">We couldn’t complete passkey verification inside the embedded checkout. Continue securely on Prava.</p>}
       <div className="mt-4 flex flex-col gap-2 sm:flex-row">
         <Button disabled={loading} onClick={startCheckout}>
           {loading ? (
@@ -399,6 +420,7 @@ export function ApprovalPanel({
           Reject
         </Button>
       </div>
+      <Button className="mt-3 w-full" disabled={hostedLoading || loading} onClick={startHostedCheckout} variant={hostedFallback ? "default" : "outline"}>{hostedLoading ? <LoaderCircle className="mr-2 size-4 animate-spin" /> : <CheckCircle2 className="mr-2 size-4" />}Open Secure Prava Checkout</Button>
       {process.env.NODE_ENV !== "production" && (
         <Button className="mt-3" onClick={preview} size="sm" variant="ghost">
           <Clock3 className="mr-2 size-4" />

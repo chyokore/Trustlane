@@ -1,0 +1,3 @@
+import { getPravaPaymentResult } from "@/services/prava";
+export const runtime = "nodejs";
+export async function POST(request: Request) { try { const body = await request.json() as { sessionId?: unknown }; if (typeof body.sessionId !== "string" || !/^[a-zA-Z0-9_-]{6,200}$/.test(body.sessionId)) return Response.json({ error: "Invalid session ID." }, { status: 400 }); const result = await getPravaPaymentResult(body.sessionId); return Response.json(result); } catch (error) { if (process.env.NODE_ENV !== "production") console.error("[TrustLane Prava payment result]", error); return Response.json({ error: "Unable to check payment status." }, { status: 502 }); } }
