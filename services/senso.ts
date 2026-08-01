@@ -2,6 +2,7 @@ import "server-only";
 
 const SENSO_BASE_URL = "https://apiv2.senso.ai/api/v1";
 const SENSO_TIMEOUT_MS = 12_000;
+let connectivityCache: { connected: boolean; expiresAt: number } | undefined;
 
 export type SensoVerificationStatus = "verified" | "not_found" | "unavailable";
 
@@ -17,6 +18,7 @@ export interface VerifiedMerchantContext {
   groundedAnswer: string;
   citations: SensoSourceCitation[];
   verificationStatus: SensoVerificationStatus;
+  verifiedAt?: string;
 }
 
 export interface RawMerchantContextInput {
@@ -69,7 +71,7 @@ function diagnostics(label: string, detail: unknown) {
   }
 }
 
-async function request<T>(path: string, body: unknown): Promise<T> {
+async function request<T>(path: string, options: { method?: "GET" | "POST"; body?: unknown } = {}): Promise<T> {
   const apiKey = getApiKey();
   if (!apiKey) throw new Error("SENSO_API_KEY is not configured.");
 
@@ -77,12 +79,12 @@ async function request<T>(path: string, body: unknown): Promise<T> {
   const timeout = setTimeout(() => controller.abort(), SENSO_TIMEOUT_MS);
   try {
     const response = await fetch(`${SENSO_BASE_URL}${path}`, {
-      method: "POST",
+      method: options.method ?? "POST",
       headers: {
         "Content-Type": "application/json",
         "X-API-Key": apiKey,
       },
-      body: JSON.stringify(body),
+      body: options.body === undefined ? undefined : JSON.stringify(options.body),
       signal: controller.signal,
       cache: "no-store",
     });
@@ -103,10 +105,27 @@ async function request<T>(path: string, body: unknown): Promise<T> {
 /** Adds a manually supplied Markdown source to the organization's Senso KB. */
 export async function createRawMerchantContext(input: RawMerchantContextInput) {
   return request<Record<string, unknown>>("/org/kb/raw", {
-    title: input.title,
-    content: input.markdown,
-    metadata: input.metadata,
+    body: { title: input.title, content: input.markdown, metadata: input.metadata },
   });
+}
+
+/** Checks server-side access before search. It never returns or logs the API key. */
+export async function verifySensoConnectivity(): Promise<boolean> {
+  if (connectivityCache && connectivityCache.expiresAt > Date.now()) {
+    return connectivityCache.connected;
+  }
+  try {
+    await request<SensoSearchResponse>("/org/search", {
+      body: { query: "TrustLane Senso connectivity check.", max_results: 1 },
+    });
+    diagnostics("Connectivity verified", { configured: true });
+    connectivityCache = { connected: true, expiresAt: Date.now() + 60_000 };
+    return true;
+  } catch (error) {
+    diagnostics("Connectivity unavailable", { configured: Boolean(getApiKey()), message: error instanceof Error ? error.message : String(error) });
+    connectivityCache = { connected: false, expiresAt: Date.now() + 15_000 };
+    return false;
+  }
 }
 
 /** Searches the Senso KB and converts only returned sources into UI citations. */
@@ -114,9 +133,9 @@ export async function searchVerifiedMerchantContext(
   merchant: string,
 ): Promise<VerifiedMerchantContext> {
   try {
+    if (!(await verifySensoConnectivity())) return unavailable(merchant);
     const response = await request<SensoSearchResponse>("/org/search", {
-      query: `What verified merchant context is available for ${merchant}? Include return policy, warranty, shipping or fulfillment, and cite only available sources.`,
-      max_results: 5,
+      body: { query: `What verified merchant context is available for ${merchant}? Include return policy, warranty, shipping or fulfillment, and cite only available sources.`, max_results: 5 },
     });
     const citations = (response.results ?? []).flatMap((source) => {
       const metadata = source.metadata ?? {};
@@ -127,14 +146,16 @@ export async function searchVerifiedMerchantContext(
       const lastVerifiedAt = typeof metadata.lastVerifiedAt === "string" ? metadata.lastVerifiedAt : undefined;
       return [{ title, url, relevanceScore, lastVerifiedAt }];
     });
+    const verifiedAt = citations.find((citation) => citation.lastVerifiedAt)?.lastVerifiedAt;
     if (!response.answer && citations.length === 0) {
-      return { merchant, groundedAnswer: "No verified merchant context was found.", citations, verificationStatus: "not_found" };
+      return { merchant, groundedAnswer: "No verified merchant context was found.", citations, verificationStatus: "not_found", verifiedAt };
     }
     return {
       merchant,
       groundedAnswer: response.answer ?? "Relevant merchant sources were found.",
       citations,
       verificationStatus: "verified",
+      verifiedAt,
     };
   } catch (error) {
     diagnostics("Merchant-context search unavailable", {

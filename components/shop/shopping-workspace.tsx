@@ -68,6 +68,7 @@ export function ShoppingWorkspace() {
   const [error, setError] = useState<string>();
   const [merchantContext, setMerchantContext] =
     useState<VerifiedMerchantContext>();
+  const [merchantContextLoading, setMerchantContextLoading] = useState(false);
   const research = async (prompt: string) => {
     setLoading(true);
     setError(undefined);
@@ -82,6 +83,8 @@ export function ShoppingWorkspace() {
         throw new Error(data.error ?? "AI research could not be completed.");
       setResult(data);
       dashboardStorage.setResearch(data);
+      setMerchantContextLoading(true);
+      setMerchantContext(undefined);
       void fetch("/api/senso/merchant-context", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -89,7 +92,10 @@ export function ShoppingWorkspace() {
       })
         .then(async (contextResponse) => {
           const context = (await contextResponse.json()) as VerifiedMerchantContext;
-          if (contextResponse.ok) setMerchantContext(context);
+          if (!contextResponse.ok)
+            throw new Error("Verified context temporarily unavailable.");
+          setMerchantContext(context);
+          dashboardStorage.setMerchantContext(context);
         })
         .catch(() => {
           setMerchantContext({
@@ -98,7 +104,8 @@ export function ShoppingWorkspace() {
             citations: [],
             verificationStatus: "unavailable",
           });
-        });
+        })
+        .finally(() => setMerchantContextLoading(false));
     } catch (caught) {
       setError(
         caught instanceof Error
@@ -175,10 +182,10 @@ export function ShoppingWorkspace() {
               ))}
             </div>
           </section>
-          <DecisionLedger context={merchantContext} research={result} />
-          <ApprovalPanel recommendation={checkout} research={result} />
+          <DecisionLedger context={merchantContext} loading={merchantContextLoading} research={result} />
+          <ApprovalPanel context={merchantContext} recommendation={checkout} research={result} />
         </div>
-        <ResearchSummary context={merchantContext} />
+        <ResearchSummary context={merchantContext} loading={merchantContextLoading} />
       </div>
     </main>
   );

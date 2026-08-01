@@ -10,7 +10,7 @@ const reasoning = [
   "Weighted independent repairability, warranty coverage, and low return friction.",
   "Excluded merchants with unresolved delivery or review-integrity signals.",
 ];
-export function DecisionLedger({ context, research }: { context?: VerifiedMerchantContext; research?: AgentResult }) {
+export function DecisionLedger({ context, loading, research }: { context?: VerifiedMerchantContext; loading?: boolean; research?: AgentResult }) {
   const [open, setOpen] = useState(false);
   const ledger = research?.decisionLedger;
   const timeline = ledger?.reasoningTimeline ?? reasoning;
@@ -72,7 +72,7 @@ export function DecisionLedger({ context, research }: { context?: VerifiedMercha
             </div>
           </div>
         </div>
-        <div className="mt-4"><VerifiedSensoContext context={context} /></div>
+        <div className="mt-4"><VerifiedSensoContext context={context} loading={loading} /></div>
         <button
           aria-expanded={open}
           aria-controls="decision-reasoning-timeline"

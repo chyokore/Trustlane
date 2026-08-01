@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { dashboardStorage } from "@/lib/dashboard-storage";
 import type { AgentResult } from "@/types/agents";
 import type { CheckoutAttempt, OrderStatus } from "@/types/dashboard-state";
+import type { VerifiedMerchantContext } from "@/services/senso";
 export interface CheckoutRecommendation {
   merchant: string;
   merchantUrl: string;
@@ -46,10 +47,12 @@ function TrustReplay({
   research,
   receipt,
   paymentStartedAt,
+  merchantContext,
 }: {
   research?: AgentResult;
   receipt?: Receipt;
   paymentStartedAt?: string;
+  merchantContext?: VerifiedMerchantContext;
 }) {
   const outcome = receipt
     ? receipt.status === "succeeded"
@@ -82,6 +85,10 @@ function TrustReplay({
       research
         ? research.merchantAnalysis.summary
         : "Merchant analysis pending",
+    ],
+    [
+      "Senso verification",
+      merchantContext?.groundedAnswer ?? "Verified context temporarily unavailable.",
     ],
     [
       "Risks assessed",
@@ -127,9 +134,11 @@ function TrustReplay({
 export function ApprovalPanel({
   recommendation,
   research,
+  context,
 }: {
   recommendation: CheckoutRecommendation;
   research?: AgentResult;
+  context?: VerifiedMerchantContext;
 }) {
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
@@ -227,6 +236,7 @@ export function ApprovalPanel({
             body: JSON.stringify({
               merchant: confirmedReceipt.merchant,
               product: confirmedReceipt.product,
+              amount: confirmedReceipt.amount,
               transactionId: confirmedReceipt.transactionId,
               ledgerId: confirmedReceipt.ledgerId,
               timestamp: confirmedReceipt.timestamp,
@@ -321,6 +331,7 @@ export function ApprovalPanel({
             paymentStartedAt={paymentStartedAt}
             receipt={receipt}
             research={research}
+            merchantContext={context}
           />
         )}
       </section>
