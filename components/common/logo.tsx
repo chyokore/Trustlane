@@ -1,12 +1,10 @@
-import { ShieldCheck } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export function Logo() {
   return (
-    <a aria-label="TrustLane home" className="inline-flex items-center gap-2 text-lg font-semibold tracking-tight" href="#home">
-      <span className="grid size-8 place-items-center rounded-lg bg-primary text-primary-foreground">
-        <ShieldCheck aria-hidden="true" className="size-[18px]" />
-      </span>
-      TrustLane
-    </a>
+    <Link aria-label="TrustLane home" className="inline-flex items-center" href="/">
+      <Image alt="TrustLane" className="h-8 w-auto" height={32} priority src="/brand/trustlane-wordmark.svg" width={130} />
+    </Link>
   );
 }

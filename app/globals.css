@@ -4,20 +4,20 @@
 
 @layer base {
   :root {
-    --background: 222 47% 7%;
-    --foreground: 210 40% 96%;
-    --card: 222 37% 11%;
+    --background: 220 49% 7%;
+    --foreground: 210 32% 96%;
+    --card: 220 42% 10%;
     --card-foreground: 210 40% 96%;
-    --primary: 168 76% 52%;
+    --primary: 167 84% 43%;
     --primary-foreground: 222 47% 7%;
-    --muted: 218 25% 16%;
-    --muted-foreground: 215 20% 65%;
-    --border: 217 23% 20%;
-    --radius: 1rem;
+    --muted: 219 31% 14%;
+    --muted-foreground: 215 18% 67%;
+    --border: 216 29% 18%;
+    --radius: 0.75rem;
   }
 
   * { @apply border-border; }
   html { scroll-behavior: smooth; }
-  body { @apply min-h-screen bg-background font-sans text-foreground antialiased; background-image: radial-gradient(circle at 50% -20%, rgb(45 212 191 / 0.12), transparent 32rem); }
+  body { @apply min-h-screen bg-background font-sans text-foreground antialiased; background-image: radial-gradient(circle at 20% -10%, rgb(15 118 110 / 0.14), transparent 34rem), radial-gradient(circle at 88% 10%, rgb(16 185 129 / 0.06), transparent 28rem); }
   ::selection { @apply bg-primary/30 text-foreground; }
 }
