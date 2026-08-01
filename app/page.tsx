@@ -1,4 +1,3 @@
-"use client";
 import { ArrowRight, Bot, CheckCircle2, FileText, GitBranch, Landmark, ShieldCheck, Sparkles, Wallet } from "lucide-react";
 import Link from "next/link";
 import { Footer } from "@/components/layout/footer";

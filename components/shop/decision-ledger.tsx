@@ -1,10 +1,11 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, FileCheck2, ShieldCheck } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useState } from "react";
-import { VerifiedSensoContext } from "@/components/senso/verified-context";
 import type { VerifiedMerchantContext } from "@/services/senso";
 import type { AgentResult } from "@/types/agents";
+const VerifiedSensoContext = dynamic(() => import("@/components/senso/verified-context").then((module) => module.VerifiedSensoContext));
 const reasoning = [
   "Matched the stated $1,200 budget with current verified pricing.",
   "Weighted independent repairability, warranty coverage, and low return friction.",

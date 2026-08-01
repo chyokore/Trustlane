@@ -2,15 +2,20 @@
 
 import { motion } from "framer-motion";
 import { Check, Package, ShieldCheck, Truck } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import type { Product } from "@/types/shop";
+import type { Product, ProductImage } from "@/types/shop";
 
 export function ComparisonCard({
   product,
   index,
+  image,
+  imageLoading,
 }: {
   product: Product;
   index: number;
+  image?: ProductImage;
+  imageLoading?: boolean;
 }) {
   return (
     <motion.article
@@ -19,11 +24,10 @@ export function ComparisonCard({
       transition={{ delay: index * 0.12 }}
       className={`relative overflow-hidden rounded-2xl border bg-card/75 p-4 ${product.recommended ? "border-primary/60 shadow-glow" : "border-border"}`}
     >
-      <div
-        className={`mb-4 flex h-32 items-center justify-center rounded-xl bg-gradient-to-br ${product.accent}`}
-      >
-        <Package className="size-12 text-white/80" />
+      <div className={`mb-4 relative flex h-32 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br ${product.accent}`}>
+        {image ? <Image alt={image.altText} className="object-contain p-2" fill sizes="(max-width: 768px) 100vw, 33vw" src={`/api/image-proxy?url=${encodeURIComponent(image.imageUrl)}`} unoptimized /> : imageLoading ? <span aria-label="Loading product image" className="size-12 animate-pulse rounded-xl bg-white/25" /> : <Image alt="TrustLane product image unavailable" className="object-contain p-8 opacity-80" fill sizes="128px" src="/brand/trustlane-shield.svg" />}
       </div>
+      {image && <a className="-mt-2 mb-3 inline-flex text-[11px] text-muted-foreground underline-offset-2 hover:text-primary hover:underline" href={image.sourceUrl} rel="noreferrer" target="_blank">Image source: {image.sourceDomain}</a>}
       {product.recommended && (
         <span className="absolute left-6 top-3 rounded-full bg-primary px-2.5 py-1 text-[10px] font-bold text-primary-foreground">
           RECOMMENDED

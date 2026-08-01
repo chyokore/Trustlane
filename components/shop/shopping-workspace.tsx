@@ -13,7 +13,7 @@ import { ResearchSummary } from "@/components/shop/research-summary";
 import { ShoppingInput } from "@/components/shop/shopping-input";
 import { dashboardStorage } from "@/lib/dashboard-storage";
 import type { AgentResult } from "@/types/agents";
-import type { Product } from "@/types/shop";
+import type { Product, ProductImage } from "@/types/shop";
 import type { VerifiedMerchantContext } from "@/services/senso";
 
 const products: Product[] = [
@@ -69,6 +69,8 @@ export function ShoppingWorkspace() {
   const [merchantContext, setMerchantContext] =
     useState<VerifiedMerchantContext>();
   const [merchantContextLoading, setMerchantContextLoading] = useState(false);
+  const [productImages, setProductImages] = useState<Record<string, ProductImage>>({});
+  const [imagesLoading, setImagesLoading] = useState(false);
   const research = async (prompt: string) => {
     setLoading(true);
     setError(undefined);
@@ -83,6 +85,24 @@ export function ShoppingWorkspace() {
         throw new Error(data.error ?? "AI research could not be completed.");
       setResult(data);
       dashboardStorage.setResearch(data);
+      setProductImages({});
+      setImagesLoading(true);
+      void (async () => {
+        const queue = [...data.researchSummary.products];
+        const results: Record<string, ProductImage> = {};
+        const lookup = async () => {
+          const product = queue.shift();
+          if (!product) return;
+          try {
+            const imageResponse = await fetch("/api/product-image", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: product.name, merchant: product.merchant }) });
+            const payload = (await imageResponse.json()) as { image?: ProductImage };
+            if (imageResponse.ok && payload.image) { results[product.name] = payload.image; setProductImages({ ...results }); }
+          } catch { /* Image availability never blocks research results. */ }
+          await lookup();
+        };
+        await Promise.all([lookup(), lookup()]);
+        setImagesLoading(false);
+      })();
       setMerchantContextLoading(true);
       setMerchantContext(undefined);
       void fetch("/api/senso/merchant-context", {
@@ -175,6 +195,8 @@ export function ShoppingWorkspace() {
             <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
               {displayProducts.map((product, index) => (
                 <ComparisonCard
+                  image={productImages[product.name]}
+                  imageLoading={imagesLoading && !productImages[product.name]}
                   index={index}
                   key={product.name}
                   product={product}

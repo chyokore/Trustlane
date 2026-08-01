@@ -21,3 +21,13 @@ export interface Product {
   recommended?: boolean;
   accent: string;
 }
+
+export interface ProductImage {
+  imageUrl: string;
+  thumbnailUrl?: string;
+  sourceUrl: string;
+  sourceDomain: string;
+  width: number;
+  height: number;
+  altText: string;
+}

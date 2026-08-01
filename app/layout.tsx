@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "TrustLane | The Trust Operating System for Agentic Commerce",
@@ -15,5 +12,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html className="dark" lang="en"><head><meta content="#39e3a4" name="theme-color" /></head><body className={inter.variable}>{children}</body></html>;
+  return <html className="dark" lang="en"><head><meta content="#39e3a4" name="theme-color" /></head><body>{children}</body></html>;
 }

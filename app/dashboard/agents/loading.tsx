@@ -1,0 +1,1 @@
+export default function Loading() { return <main className="mx-auto max-w-[1500px] animate-pulse px-4 py-7 sm:px-6 lg:px-8"><div className="h-9 w-48 rounded bg-card" /><div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{Array.from({ length: 6 }, (_, index) => <div className="h-48 rounded-2xl bg-card/60" key={index} />)}</div></main>; }

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 import { Logo } from "@/components/common/logo";
 import { cn } from "@/lib/utils";
@@ -33,7 +34,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
       {navigation.map(({ label, icon: Icon, href }) => {
         const active = href === pathname;
         return (
-          <a
+          <Link
             className={cn(
               "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
               active
@@ -46,7 +47,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
           >
             <Icon className="size-[18px]" />
             {label}
-          </a>
+          </Link>
         );
       })}
     </nav>
@@ -95,13 +96,14 @@ export function DashboardSidebar() {
           <NavLinks onNavigate={() => setMobileOpen(false)} />
         </div>
         <div className="border-t border-border pt-4">
-          <a
+          <Link
             className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             href="/dashboard/settings"
+            onClick={() => setMobileOpen(false)}
           >
             <Settings className="size-[18px]" />
             Settings
-          </a>
+          </Link>
           <div className="mt-4 rounded-xl border border-primary/15 bg-primary/5 p-4">
             <p className="text-sm font-medium">Trust, always visible.</p>
             <p className="mt-1 text-xs leading-5 text-muted-foreground">
