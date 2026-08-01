@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 7%;
+    --foreground: 210 40% 96%;
+    --card: 222 37% 11%;
+    --card-foreground: 210 40% 96%;
+    --primary: 168 76% 52%;
+    --primary-foreground: 222 47% 7%;
+    --muted: 218 25% 16%;
+    --muted-foreground: 215 20% 65%;
+    --border: 217 23% 20%;
+    --radius: 1rem;
+  }
+
+  * { @apply border-border; }
+  html { scroll-behavior: smooth; }
+  body { @apply min-h-screen bg-background font-sans text-foreground antialiased; background-image: radial-gradient(circle at 50% -20%, rgb(45 212 191 / 0.12), transparent 32rem); }
+  ::selection { @apply bg-primary/30 text-foreground; }
+}
