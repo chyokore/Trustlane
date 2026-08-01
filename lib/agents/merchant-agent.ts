@@ -1,0 +1,3 @@
+import { arrayOfStrings, runStructuredAgent, string } from "./openai";
+import type { MerchantAnalysis, ResearchSummary } from "./types";
+export const runMerchantAgent = (researchSummary: ResearchSummary) => runStructuredAgent<MerchantAnalysis>("merchant_analysis", "You are TrustLane's Merchant Verification Agent. Assess the supplied illustrative merchants and summarize verification. Do not state that you performed real-world checks.", { researchSummary }, { type: "object", additionalProperties: false, required: ["summary", "verified", "rejected"], properties: { summary: string, verified: arrayOfStrings, rejected: arrayOfStrings } });

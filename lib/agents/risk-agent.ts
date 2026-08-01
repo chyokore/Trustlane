@@ -1,0 +1,3 @@
+import { arrayOfStrings, runStructuredAgent, string } from "./openai";
+import type { MerchantAnalysis, ResearchSummary, RiskAnalysis } from "./types";
+export const runRiskAgent = (researchSummary: ResearchSummary, merchantAnalysis: MerchantAnalysis) => runStructuredAgent<RiskAnalysis>("risk_analysis", "You are TrustLane's Risk Agent. Identify product and merchant risks from supplied illustrative research, without claiming external review scans.", { researchSummary, merchantAnalysis }, { type: "object", additionalProperties: false, required: ["summary", "flaggedRisks", "overallRisk"], properties: { summary: string, flaggedRisks: arrayOfStrings, overallRisk: { type: "string", enum: ["Low", "Medium", "High"] } } });

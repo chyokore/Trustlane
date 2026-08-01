@@ -15,7 +15,7 @@ export interface Product {
   returns: string;
   shipping: string;
   delivery: string;
-  risk: "Low" | "Medium";
+  risk: "Low" | "Medium" | "High";
   pros: string[];
   cons: string[];
   recommended?: boolean;
