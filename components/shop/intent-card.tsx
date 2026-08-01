@@ -1,0 +1,4 @@
+import { CheckCircle2 } from "lucide-react";
+
+const fields = [["Product", "Gaming Laptop"], ["Budget", "$1,200"], ["Preferred currency", "USD"], ["Language", "English"], ["Shipping", "United States"], ["Warranty", "Required"], ["Merchant preference", "Verified sellers only"]];
+export function IntentCard() { return <section className="rounded-2xl border border-border bg-card/60 p-5"><div className="flex items-center gap-2"><CheckCircle2 className="size-4 text-primary" /><h2 className="font-semibold">Extracted intent</h2></div><div className="mt-4 grid gap-3 sm:grid-cols-2">{fields.map(([label, value]) => <div className="rounded-xl bg-muted/40 px-3 py-2.5" key={label}><p className="text-xs text-muted-foreground">{label}</p><p className="mt-0.5 text-sm font-medium">{value}</p></div>)}</div></section>; }

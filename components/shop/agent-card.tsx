@@ -1,0 +1,6 @@
+"use client";
+import { motion } from "framer-motion";
+import { Check, LoaderCircle, MoreHorizontal } from "lucide-react";
+import type { AgentStep } from "@/types/shop";
+const status = { completed: { label: "Completed", icon: Check, classes: "bg-primary/15 text-primary" }, active: { label: "In progress", icon: LoaderCircle, classes: "bg-violet-400/15 text-violet-300" }, pending: { label: "Queued", icon: MoreHorizontal, classes: "bg-muted text-muted-foreground" } };
+export function AgentCard({ agent, index }: { agent: AgentStep; index: number }) { const current = status[agent.status]; const Icon = current.icon; return <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 12 }} transition={{ delay: index * 0.08 }} className="relative rounded-xl border border-border bg-background/50 p-3"><div className="flex items-start justify-between gap-2"><div><p className="text-sm font-medium">{agent.name}</p><p className="mt-1 text-xs text-muted-foreground">{agent.detail}</p></div><span className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold ${current.classes}`}><Icon className={`size-3 ${agent.status === "active" ? "animate-spin" : ""}`} />{current.label}</span></div></motion.div>; }

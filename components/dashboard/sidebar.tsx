@@ -2,13 +2,14 @@
 
 import { Bookmark, Bot, ChartNoAxesCombined, Menu, PackageCheck, ReceiptText, Settings, ShoppingBag, X } from "lucide-react";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { Logo } from "@/components/common/logo";
 import { cn } from "@/lib/utils";
 
 const navigation = [
   { label: "Dashboard", icon: ChartNoAxesCombined, href: "/dashboard" },
-  { label: "Shop", icon: ShoppingBag, href: "#shop" },
+  { label: "Shop", icon: ShoppingBag, href: "/dashboard/shop" },
   { label: "My Agents", icon: Bot, href: "#agents" },
   { label: "Decision Ledger", icon: ReceiptText, href: "#ledger" },
   { label: "Orders", icon: PackageCheck, href: "#orders" },
@@ -16,7 +17,8 @@ const navigation = [
 ];
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
-  return <nav aria-label="Dashboard navigation" className="space-y-1">{navigation.map(({ label, icon: Icon, href }) => <a className={cn("flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors", label === "Dashboard" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground")} href={href} key={label} onClick={onNavigate}><Icon className="size-[18px]" />{label}</a>)}</nav>;
+  const pathname = usePathname();
+  return <nav aria-label="Dashboard navigation" className="space-y-1">{navigation.map(({ label, icon: Icon, href }) => { const active = href === pathname; return <a className={cn("flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors", active ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground")} href={href} key={label} onClick={onNavigate}><Icon className="size-[18px]" />{label}</a>; })}</nav>;
 }
 
 export function DashboardSidebar() {

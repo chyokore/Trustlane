@@ -1,0 +1,4 @@
+"use client";
+import { CheckCircle2, SlidersHorizontal, XCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+export function ApprovalPanel() { return <section className="rounded-2xl border border-primary/25 bg-primary/5 p-5"><p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Your approval is required</p><h2 className="mt-1 font-semibold">Ready when you are</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">TrustLane will never purchase without your explicit approval.</p><div className="mt-4 flex flex-col gap-2 sm:flex-row"><Button><CheckCircle2 className="mr-2 size-4" />Approve Purchase</Button><Button variant="outline"><SlidersHorizontal className="mr-2 size-4" />Modify Search</Button><Button className="sm:ml-auto" variant="ghost"><XCircle className="mr-2 size-4" />Reject</Button></div></section>; }
