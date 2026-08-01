@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { PaymentVerificationCard, type VerificationReceipt } from "@/components/verification/payment-verification-card";
 import { dashboardStorage } from "@/lib/dashboard-storage";
 import type { AgentResult } from "@/types/agents";
 import type { CheckoutAttempt, OrderStatus } from "@/types/dashboard-state";
@@ -42,6 +43,7 @@ interface Receipt {
   timestamp: string;
   ledgerId: string;
   status: PaymentStatus;
+  pravaSessionId?: string;
 }
 function TrustReplay({
   research,
@@ -230,6 +232,7 @@ export function ApprovalPanel({
             timestamp: new Date().toLocaleString(),
             ledgerId: recommendation.decisionLedgerId,
             status: "succeeded",
+            pravaSessionId: sessionId,
           };
           setReceipt(confirmedReceipt);
           recordAttempt("Completed", false, confirmedReceipt.transactionId);
@@ -284,11 +287,19 @@ export function ApprovalPanel({
       timestamp: new Date().toLocaleString(),
       ledgerId: recommendation.decisionLedgerId,
       status: "preview",
+      pravaSessionId: undefined,
     });
     setReplayOpen(false);
     recordAttempt("Sandbox Pending", true, "preview_local_only");
   };
-  if (receipt)
+  const verificationSource = receipt;
+  if (verificationSource) {
+    const verificationReceipt: VerificationReceipt = { merchant: verificationSource.merchant, product: verificationSource.product, amount: verificationSource.amount, currency: verificationSource.currency, transactionId: verificationSource.transactionId, pravaSessionId: verificationSource.pravaSessionId, timestamp: verificationSource.timestamp, ledgerId: verificationSource.ledgerId, status: verificationSource.status === "preview" ? "preview" : "succeeded" };
+    return <><PaymentVerificationCard receipt={verificationReceipt} onReplay={() => setReplayOpen((open) => !open)} />{replayOpen && <TrustReplay paymentStartedAt={paymentStartedAt} receipt={verificationSource} research={research} merchantContext={context} />}</>;
+  }
+  const legacyReceipt = verificationSource as Receipt | undefined;
+  if (legacyReceipt) {
+    const receipt = legacyReceipt;
     return (
       <section className="rounded-2xl border border-primary/30 bg-primary/5 p-5">
         <div className="flex items-center gap-2 text-primary">
@@ -339,6 +350,7 @@ export function ApprovalPanel({
         )}
       </section>
     );
+  }
   return (
     <section className="rounded-2xl border border-primary/25 bg-primary/5 p-5">
       <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
