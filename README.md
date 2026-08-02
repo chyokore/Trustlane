@@ -39,8 +39,8 @@ Decision Ledger — every recommendation is fully explainable.
 
 ### Hosted Checkout
 
-<img width="686" height="1280" alt="hosted-checkout png" src="https://github.com/user-attachments/assets/34cd74e2
--4b76-4f00-ab84-1bd88e92d1df" />
+<img width="686" height="1280" alt="hosted-checkout png" src="https://github.com/user-attachments/assets/a0592f76-6f04-4acc-9d98-45ad8dfdef3e" />
+
 
 Prava Hosted Checkout integrated into the TrustLane workflow.
 
