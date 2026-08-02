@@ -16,6 +16,7 @@ import { merchantUrlSourceLabel, resolveMerchantUrl } from "@/lib/merchant-url";
 import { publicLinks } from "@/lib/public-links";
 import { downloadReceiptJson } from "@/lib/receipt-json";
 import type { CheckoutAttempt } from "@/types/dashboard-state";
+import { DemoStateTransferControls } from "@/components/dashboard/demo-state-transfer-controls";
 
 const cards = [
   ["Merchant Passport", Landmark, "/dashboard/verify#passport"],
@@ -89,6 +90,8 @@ export function VerificationHub() {
         Inspect the evidence, decision trail, and checkout artifacts behind the
         latest commerce recommendation.
       </p>
+      <div className="mt-4"><DemoStateTransferControls compact /></div>
+      {!research.value && !context.value && orders.value.length === 0 && <section className="mt-5 rounded-2xl border border-border bg-card/60 p-5"><p className="text-sm text-muted-foreground">TrustLane stores guest activity locally in this browser. Activity created on another device will not appear automatically.</p><div className="mt-4 flex flex-wrap items-center gap-3"><Link className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground" href="/dashboard/shop">Start Shopping</Link><DemoStateTransferControls compact /></div></section>}
       <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map(([title, Icon, href]) => {
           const external = href.startsWith("http");

@@ -108,6 +108,14 @@ Sensitive provider credentials remain server-side. TrustLane does not store card
 | `/dashboard/checkout/complete` | Hosted checkout callback reconciliation |
 | `/docs` | In-app technical documentation |
 
+## Guest Data & Cross-Device Demo
+
+TrustLane operates in guest mode for the hackathon. Research, Decision Ledger data, merchant evidence, order attempts, verification events, saved products, and preferences are intentionally stored in the current browser rather than synchronized through an account or cloud database.
+
+Activity created on another browser or device does not appear automatically. Use **Export Demo State** in Settings or Verification Center, then **Import Demo State** on the destination browser to merge the safe demo history with its existing local activity. Newer records are preserved and duplicate attempts are matched by their safe identifiers.
+
+Exports never include customer email addresses, API keys, access tokens, Prava session tokens, card data, CVV, OTP values, passkeys, payment credentials, or callback secrets. Import and export are client-side operations and do not call OpenAI, Senso, Prava, or any TrustLane API route.
+
 ## Local Development
 
 ### Prerequisites
