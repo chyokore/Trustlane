@@ -33,13 +33,14 @@ TrustLane Dashboard — the AI commerce control center.
 
 ### Decision Ledger
 
-<img width="517" height="720" alt="decision-ledger png" src="https://github.com/user-attachments/assets/3de6a4e4-54cc-48cb-ac1b-ca001a198253" />
+<img width="720" height="517" alt="decision-ledger png" src="https://github.com/user-attachments/assets/36282ee8-7b1c-41f1-be9f-1050e727ecba" />
 
 Decision Ledger — every recommendation is fully explainable.
 
 ### Hosted Checkout
 
-<img width="686" height="1280" alt="hosted-checkout png" src="https://github.com/user-attachments/assets/34cd74e2-4b76-4f00-ab84-1bd88e92d1df" />)
+<img width="686" height="1280" alt="hosted-checkout png" src="https://github.com/user-attachments/assets/34cd74e2
+-4b76-4f00-ab84-1bd88e92d1df" />)
 
 Prava Hosted Checkout integrated into the TrustLane workflow.
 
