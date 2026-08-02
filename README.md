@@ -25,7 +25,7 @@ The demo showcases:
 
 ### Dashboard
 
-![TrustLane Dashboard](<img width="720" height="1201" alt="dashboard png" src="https://github.com/user-attachments/assets/450d2b09-ff3c-44f7-b1cc-00a5777ff312" />
+<img width="720" height="1201" alt="dashboard png" src="https://github.com/user-attachments/assets/450d2b09-ff3c-44f7-b1cc-00a5777ff312" />
 
 
 
@@ -33,27 +33,27 @@ TrustLane Dashboard — the AI commerce control center.
 
 ### Decision Ledger
 
-![TrustLane Decision Ledger](<img width="517" height="720" alt="decision-ledger png" src="https://github.com/user-attachments/assets/3de6a4e4-54cc-48cb-ac1b-ca001a198253" />)
+<img width="517" height="720" alt="decision-ledger png" src="https://github.com/user-attachments/assets/3de6a4e4-54cc-48cb-ac1b-ca001a198253" />
 
 Decision Ledger — every recommendation is fully explainable.
 
 ### Hosted Checkout
 
-![Prava Hosted Checkout](<img width="686" height="1280" alt="hosted-checkout png" src="https://github.com/user-attachments/assets/34cd74e2-4b76-4f00-ab84-1bd88e92d1df" />)
+<img width="686" height="1280" alt="hosted-checkout png" src="https://github.com/user-attachments/assets/34cd74e2-4b76-4f00-ab84-1bd88e92d1df" />)
 
 Prava Hosted Checkout integrated into the TrustLane workflow.
 
 ### Payment Status
 
-![TrustLane payment status](<img width="720" height="421" alt="payment-status png" src="https://github.com/user-attachments/assets/33a90ad5-dfd8-4e00-bb07-4e25affd993e" />
+<img width="720" height="421" alt="payment-status png" src="https://github.com/user-attachments/assets/33a90ad5-dfd8-4e00-bb07-4e25affd993e" />
 
 
 Payment authorization recorded without claiming merchant completion.
 
 ### Order History
 
-![TrustLane order history](<img width="662" height="1280" alt="order-history png" src="https://github.com/user-attachments/assets/ece9519f-9461-45a1-92c2-50e704410e26" />
-)
+<img width="662" height="1280" alt="order-history png" src="https://github.com/user-attachments/assets/ece9519f-9461-45a1-92c2-50e704410e26" />
+
 
 Downloadable receipts and complete order history.
 
