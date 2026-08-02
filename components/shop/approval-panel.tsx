@@ -47,7 +47,7 @@ export function ApprovalPanel({ recommendation, research: _research, context: _c
 
   const recordAttempt = (status: OrderStatus, session?: { sessionId?: string; orderId?: string }, transactionId?: string) => {
     const attempt: CheckoutAttempt = { id: session?.sessionId ?? `${status}-${Date.now()}`, sessionId: session?.sessionId, orderId: session?.orderId, checkoutMode: session ? "embedded" : undefined, product: recommendation.product, merchant: recommendation.merchant, amount: displayAmount, currency: recommendation.currency, status, timestamp: new Date().toISOString(), decisionLedgerId: recommendation.decisionLedgerId, transactionId };
-    dashboardStorage.setOrders([attempt, ...dashboardStorage.getOrders()]);
+    dashboardStorage.mergeOrder(attempt);
   };
 
   const startEmbeddedCheckout = async () => {
@@ -78,8 +78,9 @@ export function ApprovalPanel({ recommendation, research: _research, context: _c
       const createdAt = new Date().toISOString();
       setHostedCheckoutUrl(session.iframeUrl); setHostedNavigationFallbackVisible(true);
       dashboardStorage.setHostedSession({ sessionId: session.sessionId, orderId: session.orderId, merchant: recommendation.merchant, product: recommendation.product, amount: displayAmount, currency: recommendation.currency, ledgerId: recommendation.decisionLedgerId, createdAt, expiresAt: session.expiresAt });
-      const attempt: CheckoutAttempt = { id: `hosted-${session.sessionId}`, sessionId: session.sessionId, orderId: session.orderId, checkoutMode: "hosted", product: recommendation.product, merchant: recommendation.merchant, amount: displayAmount, currency: recommendation.currency, status: "Sandbox Pending", timestamp: createdAt, decisionLedgerId: recommendation.decisionLedgerId };
-      dashboardStorage.setOrders([attempt, ...dashboardStorage.getOrders()]);
+      const attemptId = `hosted-${session.sessionId}`;
+      const attempt: CheckoutAttempt = { id: attemptId, attemptId, sessionId: session.sessionId, orderId: session.orderId, checkoutMode: "hosted", product: recommendation.product, merchant: recommendation.merchant, amount: displayAmount, currency: recommendation.currency, status: "Pending", timestamp: createdAt, createdAt, ledgerId: recommendation.decisionLedgerId, decisionLedgerId: recommendation.decisionLedgerId, events: [{ type: "hosted_opened", label: "Hosted checkout opened", timestamp: createdAt }] };
+      dashboardStorage.mergeOrder(attempt);
       setIsRedirectingHosted(true);
       try { window.location.assign(session.iframeUrl); } catch { setIsRedirectingHosted(false); setHostedNavigationFallbackVisible(true); }
     } catch { setIsRedirectingHosted(false); setHostedError({ message: "Hosted checkout could not be created.", code: "hosted_checkout_unavailable", status: 0 }); }
