@@ -6,12 +6,67 @@ Research → Verify → Explain → Approve → Pay → Prove
 
 TrustLane is an AI-assisted shopping workspace that verifies merchants, explains recommendations, requires explicit human approval, completes secure hosted checkout through Prava, and preserves an auditable commerce trail.
 
-[Try TrustLane](https://trustlane-pi.vercel.app) · [Watch the Demo](https://youtube.com/shorts/5hE6shioASE?si=ImZffbwxoQxjtCG8) · [Verify the Evidence](https://trustlane-pi.vercel.app/evidence) · [Review the Source](https://github.com/chyokore/Trustlane)
+## 🎥 Demo Video
+
+[![TrustLane Demo](https://img.youtube.com/vi/jphPNkMn8B0/maxresdefault.jpg)](https://www.youtube.com/shorts/jphPNkMn8B0?si=ARit2BtE3gyw9yim)
+
+### 🎥 Watch the 2-minute TrustLane walkthrough
+
+The demo showcases:
+
+- AI merchant research
+- Transparent Decision Ledger
+- Prava Hosted Checkout
+- Authorization status
+- Order history with downloadable receipts
+- Live Judge Verification Pack
+
+## 📸 Product Gallery
+
+### Dashboard
+
+![TrustLane Dashboard](docs/images/dashboard.png)
+
+TrustLane Dashboard — the AI commerce control center.
+
+### Decision Ledger
+
+![TrustLane Decision Ledger](docs/images/decision-ledger.png)
+
+Decision Ledger — every recommendation is fully explainable.
+
+### Hosted Checkout
+
+![Prava Hosted Checkout](docs/images/hosted-checkout.png)
+
+Prava Hosted Checkout integrated into the TrustLane workflow.
+
+### Payment Status
+
+![TrustLane payment status](docs/images/payment-status.png)
+
+Payment authorization recorded without claiming merchant completion.
+
+### Order History
+
+![TrustLane order history](docs/images/order-history.png)
+
+Downloadable receipts and complete order history.
+
+## 🔗 Quick Links
+
+- [🌐 Live Demo](https://trustlane-pi.vercel.app)
+- [🎥 Demo Video](https://www.youtube.com/shorts/jphPNkMn8B0?si=ARit2BtE3gyw9yim)
+- [📦 GitHub Repository](https://github.com/chyokore/Trustlane)
+- [📄 Evidence Pack](https://trustlane-pi.vercel.app/evidence)
+- [📑 Judge Verification Page](https://trustlane-pi.vercel.app/evidence)
+
+[Try TrustLane](https://trustlane-pi.vercel.app) · [Watch the Demo](https://www.youtube.com/shorts/jphPNkMn8B0?si=ARit2BtE3gyw9yim) · [Verify the Evidence](https://trustlane-pi.vercel.app/evidence) · [Review the Source](https://github.com/chyokore/Trustlane)
 
 ## Verify TrustLane in 90 Seconds
 
 - [Live App](https://trustlane-pi.vercel.app)
-- [Demo Video](https://youtube.com/shorts/5hE6shioASE?si=ImZffbwxoQxjtCG8)
+- [Demo Video](https://www.youtube.com/shorts/jphPNkMn8B0?si=ARit2BtE3gyw9yim)
 - [Public Evidence Pack](https://trustlane-pi.vercel.app/evidence)
 - [Latest Research](https://trustlane-pi.vercel.app/demo-data/latest-research.json)
 - [Decision Ledger](https://trustlane-pi.vercel.app/demo-data/latest-decision-ledger.json)
@@ -229,7 +284,7 @@ No real funds move in sandbox mode. Do not describe `awaiting_result` as a compl
 ## Documentation and Public Links
 
 - [Live application](https://trustlane-pi.vercel.app)
-- [YouTube demo](https://youtube.com/shorts/5hE6shioASE?si=ImZffbwxoQxjtCG8)
+- [YouTube demo](https://www.youtube.com/shorts/jphPNkMn8B0?si=ARit2BtE3gyw9yim)
 - [Judge demo script](docs/demo-script.md)
 - [Submission summary](docs/submission-summary.md)
 - [Privacy policy](https://trustlane-pi.vercel.app/privacy)
