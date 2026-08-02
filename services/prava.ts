@@ -1,6 +1,7 @@
 import "server-only";
+import { parseCheckoutAmount } from "@/lib/checkout-amount";
 
-export interface PravaCheckoutRequest { merchant: string; merchantUrl: string; verifiedMerchantUrl?: string; product: string; amount: string; currency: string; decisionLedgerId: string; }
+export interface PravaCheckoutRequest { merchant: string; merchantUrl: string; verifiedMerchantUrl?: string; product: string; amount: number; currency: string; decisionLedgerId: string; }
 export interface PravaSession { session_id: string; session_token?: string; iframe_url: string; expires_at: string; order_id: string; }
 export type PravaSessionMode = "embedding" | "full_checkout";
 export interface PravaPaymentResult { status: "completed" | "failed" | "pending"; transactionId?: string; }
@@ -16,7 +17,7 @@ export async function createPravaSandboxSession(input: PravaCheckoutRequest, mod
   const hosted = mode === "full_checkout";
   const secretKey = getSandboxKey(hosted);
   if (hosted) stage("environment validated", "Required hosted checkout environment is configured.");
-  const amount = Number(input.amount.replace(/[^0-9.]/g, ""));
+  const amount = parseCheckoutAmount(input.amount);
   if (!Number.isFinite(amount) || amount <= 0) { if (hosted) throw new PravaValidationError("INVALID_AMOUNT", "A valid purchase amount is required.", 400); throw new Error("A valid purchase amount is required."); }
   if (hosted) stage("amount validated", "Purchase amount is valid.");
   const hostedCallbackUrl = hosted ? callbackUrl() : undefined;

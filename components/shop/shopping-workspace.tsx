@@ -12,6 +12,7 @@ import { IntentCard } from "@/components/shop/intent-card";
 import { MerchantReport } from "@/components/verification/merchant-report";
 import { ShoppingInput } from "@/components/shop/shopping-input";
 import { dashboardStorage } from "@/lib/dashboard-storage";
+import { parseCheckoutAmount } from "@/lib/checkout-amount";
 import { resolveMerchantUrl } from "@/lib/merchant-url";
 import type { AgentResult } from "@/types/agents";
 import type { Product, ProductImage } from "@/types/shop";
@@ -158,7 +159,8 @@ export function ShoppingWorkspace() {
     merchantUrl: merchantResolution?.origin ?? "",
     verifiedMerchantUrl: merchantResolution?.origin,
     product: selected.name,
-    amount: selected.price,
+    amount: parseCheckoutAmount(selected.price),
+    displayAmount: selected.price,
     currency: result?.intent.currency ?? "USD",
     decisionLedgerId: result
       ? `DL-${result.decisionLedger.overallTrustScore}-${result.confidenceScore}`

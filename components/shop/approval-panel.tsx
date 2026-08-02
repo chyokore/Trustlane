@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PaymentVerificationCard, type VerificationReceipt } from "@/components/verification/payment-verification-card";
 import { dashboardStorage } from "@/lib/dashboard-storage";
+import { parseCheckoutAmount } from "@/lib/checkout-amount";
 import { merchantUrlSourceLabel, type MerchantUrlResolution } from "@/lib/merchant-url";
 import type { AgentResult } from "@/types/agents";
 import type { CheckoutAttempt, OrderStatus } from "@/types/dashboard-state";
@@ -23,7 +24,8 @@ export interface CheckoutRecommendation {
   merchantUrl: string;
   verifiedMerchantUrl?: string;
   product: string;
-  amount: string;
+  amount: number;
+  displayAmount: string;
   currency: string;
   decisionLedgerId: string;
 }
@@ -159,6 +161,9 @@ export function ApprovalPanel({
   const [hostedFallback, setHostedFallback] = useState(false);
   const [hostedError, setHostedError] = useState<{ message: string; code?: string; status?: number }>();
   const checkoutEligible = Boolean(merchantResolution);
+  const parsedAmount = parseCheckoutAmount(recommendation.amount);
+  const amountAvailable = Number.isFinite(parsedAmount);
+  const displayAmount = amountAvailable ? recommendation.displayAmount : "Price unavailable";
   const hostedInFlight = useRef(false);
   const sdk = useRef<PravaSDK | null>(null);
   const destroy = () => {
@@ -175,7 +180,7 @@ export function ApprovalPanel({
       id: `${nextStatus}-${Date.now()}`,
       product: recommendation.product,
       merchant: recommendation.merchant,
-      amount: recommendation.amount,
+      amount: displayAmount,
       currency: recommendation.currency,
       status: nextStatus,
       timestamp: new Date().toLocaleString(),
@@ -187,6 +192,7 @@ export function ApprovalPanel({
   };
   const startCheckout = async () => {
     if (loading || !checkoutEligible) return;
+    if (!amountAvailable) { setError("Price data is unavailable for this recommendation. Please choose another product."); return; }
     setLoading(true);
     setReady(false);
     setStatus("pending");
@@ -197,7 +203,7 @@ export function ApprovalPanel({
       const response = await fetch("/api/prava/create-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(recommendation),
+        body: JSON.stringify({ ...recommendation, amount: parsedAmount, displayAmount: undefined }),
       });
       const session = (await response.json()) as SessionResponse;
       diagnose("Session response", {
@@ -237,7 +243,7 @@ export function ApprovalPanel({
           const confirmedReceipt: Receipt = {
             merchant: recommendation.merchant,
             product: recommendation.product,
-            amount: recommendation.amount,
+            amount: displayAmount,
             currency: recommendation.currency,
             transactionId: result.enrollmentId || session.orderId || sessionId,
             timestamp: new Date().toLocaleString(),
@@ -291,16 +297,17 @@ export function ApprovalPanel({
   };
   const startHostedCheckout = async () => {
     if (hostedLoading || loading || hostedInFlight.current || !checkoutEligible) return;
+    if (!amountAvailable) { setHostedError({ message: "Price data is unavailable for this recommendation.", code: "invalid_amount", status: 400 }); return; }
     hostedInFlight.current = true;
     setHostedLoading(true);
     setHostedError(undefined);
     try {
-      const response = await fetch("/api/prava/create-hosted-session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(recommendation) });
+      const response = await fetch("/api/prava/create-hosted-session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...recommendation, amount: parsedAmount, displayAmount: undefined }) });
       const session = (await response.json()) as HostedSessionResponse;
       if (!response.ok || !session.sessionId || !session.orderId || !session.iframeUrl || !session.expiresAt || !session.iframeUrl.startsWith("https://")) { setHostedError({ message: session.error ?? "Hosted checkout could not be created.", code: session.code ?? "hosted_checkout_unavailable", status: session.status ?? response.status }); return; }
       const createdAt = new Date().toLocaleString();
-      dashboardStorage.setHostedSession({ sessionId: session.sessionId, orderId: session.orderId, merchant: recommendation.merchant, product: recommendation.product, amount: recommendation.amount, currency: recommendation.currency, decisionLedgerId: recommendation.decisionLedgerId, createdAt, expiresAt: session.expiresAt });
-      const attempt: CheckoutAttempt = { id: `hosted-${session.sessionId}`, sessionId: session.sessionId, orderId: session.orderId, checkoutMode: "hosted", product: recommendation.product, merchant: recommendation.merchant, amount: recommendation.amount, currency: recommendation.currency, status: "Sandbox Pending", timestamp: createdAt, decisionLedgerId: recommendation.decisionLedgerId };
+      dashboardStorage.setHostedSession({ sessionId: session.sessionId, orderId: session.orderId, merchant: recommendation.merchant, product: recommendation.product, amount: displayAmount, currency: recommendation.currency, decisionLedgerId: recommendation.decisionLedgerId, createdAt, expiresAt: session.expiresAt });
+      const attempt: CheckoutAttempt = { id: `hosted-${session.sessionId}`, sessionId: session.sessionId, orderId: session.orderId, checkoutMode: "hosted", product: recommendation.product, merchant: recommendation.merchant, amount: displayAmount, currency: recommendation.currency, status: "Sandbox Pending", timestamp: createdAt, decisionLedgerId: recommendation.decisionLedgerId };
       dashboardStorage.setOrders([attempt, ...dashboardStorage.getOrders()]);
       window.location.assign(session.iframeUrl);
     } catch { setHostedError({ message: "Hosted checkout could not be created.", code: "hosted_checkout_unavailable", status: 0 }); } finally { hostedInFlight.current = false; setHostedLoading(false); }
@@ -310,7 +317,7 @@ export function ApprovalPanel({
     setReceipt({
       merchant: recommendation.merchant,
       product: recommendation.product,
-      amount: recommendation.amount,
+      amount: displayAmount,
       currency: recommendation.currency,
       transactionId: "preview_local_only",
       timestamp: new Date().toLocaleString(),
@@ -416,7 +423,7 @@ export function ApprovalPanel({
       {hostedError && <p className="mt-3 rounded-xl border border-red-400/25 bg-red-400/10 px-3 py-2 text-sm text-red-100">{hostedError.message}<br /><span className="text-xs">Reference: {hostedError.code ?? "hosted_checkout_unavailable"}/{hostedError.status ?? 0}</span></p>}
       {hostedFallback && <p className="mt-3 rounded-xl border border-amber-400/25 bg-amber-400/10 px-3 py-2 text-sm text-amber-100">We couldn’t complete passkey verification inside the embedded checkout. Continue securely on Prava.</p>}
       <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-        <Button disabled={loading || !checkoutEligible} onClick={startCheckout}>
+        <Button disabled={loading || !checkoutEligible || !amountAvailable} onClick={startCheckout}>
           {loading ? (
             <LoaderCircle className="mr-2 size-4 animate-spin" />
           ) : (
@@ -433,7 +440,8 @@ export function ApprovalPanel({
           Reject
         </Button>
       </div>
-      <Button className="mt-3 w-full" disabled={hostedLoading || loading || !checkoutEligible} onClick={startHostedCheckout} variant={hostedFallback ? "default" : "outline"}>{hostedLoading ? <LoaderCircle className="mr-2 size-4 animate-spin" /> : <CheckCircle2 className="mr-2 size-4" />}{hostedError ? "Retry Hosted Checkout" : "Open Secure Prava Checkout"}</Button>
+      {!amountAvailable && <p className="mt-3 text-sm text-red-300">Price data is unavailable for this recommendation.</p>}
+      <Button className="mt-3 w-full" disabled={hostedLoading || loading || !checkoutEligible || !amountAvailable} onClick={startHostedCheckout} variant={hostedFallback ? "default" : "outline"}>{hostedLoading ? <LoaderCircle className="mr-2 size-4 animate-spin" /> : <CheckCircle2 className="mr-2 size-4" />}{hostedError ? "Retry Hosted Checkout" : "Open Secure Prava Checkout"}</Button>
       {process.env.NODE_ENV !== "production" && (
         <Button className="mt-3" onClick={preview} size="sm" variant="ghost">
           <Clock3 className="mr-2 size-4" />
