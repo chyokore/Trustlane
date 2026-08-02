@@ -1,1 +1,1 @@
-export const publicLinks = { repository: process.env.NEXT_PUBLIC_REPOSITORY_URL ?? "https://github.com", liveApp: process.env.NEXT_PUBLIC_LIVE_APP_URL ?? "/", demoVideo: process.env.NEXT_PUBLIC_DEMO_VIDEO_URL } as const;
+export const publicLinks = { repository: "https://github.com/chyokore/Trustlane", liveApp: "https://trustlane-pi.vercel.app", demoVideo: "https://youtube.com/shorts/5hE6shioASE?si=ImZffbwxoQxjtCG8" } as const;

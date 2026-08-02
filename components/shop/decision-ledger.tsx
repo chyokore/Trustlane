@@ -5,14 +5,31 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import type { VerifiedMerchantContext } from "@/services/senso";
 import type { AgentResult } from "@/types/agents";
-import { merchantUrlSourceLabel, type MerchantUrlResolution } from "@/lib/merchant-url";
-const VerifiedSensoContext = dynamic(() => import("@/components/senso/verified-context").then((module) => module.VerifiedSensoContext));
+import {
+  merchantUrlSourceLabel,
+  type MerchantUrlResolution,
+} from "@/lib/merchant-url";
+const VerifiedSensoContext = dynamic(() =>
+  import("@/components/senso/verified-context").then(
+    (module) => module.VerifiedSensoContext,
+  ),
+);
 const reasoning = [
   "Matched the stated $1,200 budget with current verified pricing.",
   "Weighted independent repairability, warranty coverage, and low return friction.",
   "Excluded merchants with unresolved delivery or review-integrity signals.",
 ];
-export function DecisionLedger({ context, loading, merchantResolution, research }: { context?: VerifiedMerchantContext; loading?: boolean; merchantResolution?: MerchantUrlResolution; research?: AgentResult }) {
+export function DecisionLedger({
+  context,
+  loading,
+  merchantResolution,
+  research,
+}: {
+  context?: VerifiedMerchantContext;
+  loading?: boolean;
+  merchantResolution?: MerchantUrlResolution;
+  research?: AgentResult;
+}) {
   const [open, setOpen] = useState(false);
   const ledger = research?.decisionLedger;
   const timeline = ledger?.reasoningTimeline ?? reasoning;
@@ -38,24 +55,28 @@ export function DecisionLedger({ context, loading, merchantResolution, research 
           <div className="rounded-xl bg-background/50 p-4">
             <h3 className="text-sm font-semibold">Why this was selected</h3>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              {ledger?.selectedReason ?? "The NovaForge 15 pairs the strongest verified merchant record with a 2-year warranty, faster delivery, and the lowest observed risk within your budget."}
+              {ledger?.selectedReason ??
+                "The NovaForge 15 pairs the strongest verified merchant record with a 2-year warranty, faster delivery, and the lowest observed risk within your budget."}
             </p>
             <h3 className="mt-4 text-sm font-semibold">
               Alternatives rejected
             </h3>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              {ledger?.alternativesRejected ?? "One option had a shorter warranty; another exceeded budget after shipping and had inconsistent review signals."}
+              {ledger?.alternativesRejected ??
+                "One option had a shorter warranty; another exceeded budget after shipping and had inconsistent review signals."}
             </p>
           </div>
           <div className="rounded-xl bg-background/50 p-4">
             <h3 className="text-sm font-semibold">Trade-offs considered</h3>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              {ledger?.tradeOffs ?? "You trade a slightly smaller display for better return terms and $141 in verified savings."}
+              {ledger?.tradeOffs ??
+                "You trade a slightly smaller display for better return terms and $141 in verified savings."}
             </p>
             <div className="mt-4 flex items-center gap-2 text-sm">
               <ShieldCheck className="size-4 text-primary" />
               <span>
-                Merchant verification: <strong>{ledger?.merchantVerification ?? "Passed"}</strong>
+                Merchant verification:{" "}
+                <strong>{ledger?.merchantVerification ?? "Passed"}</strong>
               </span>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3">
@@ -63,21 +84,44 @@ export function DecisionLedger({ context, loading, merchantResolution, research 
                 <p className="text-xs text-muted-foreground">
                   Confidence score
                 </p>
-                <p className="text-2xl font-semibold text-primary">{research?.confidenceScore ?? 92}%</p>
+                <p className="text-2xl font-semibold text-primary">
+                  {research?.confidenceScore ?? 92}%
+                </p>
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">
                   Overall Trust Score
                 </p>
-                <p className="text-2xl font-semibold">{ledger?.overallTrustScore ?? 96}/100</p>
+                <p className="text-2xl font-semibold">
+                  {ledger?.overallTrustScore ?? 96}/100
+                </p>
               </div>
             </div>
           </div>
         </div>
-        <div className="mt-4"><VerifiedSensoContext context={context} loading={loading} /></div>
+        <div className="mt-4">
+          <VerifiedSensoContext context={context} loading={loading} />
+        </div>
         <div className="mt-3 rounded-xl border border-border bg-background/50 p-3 text-sm">
           <p className="font-medium">Merchant checkout evidence</p>
-          {merchantResolution ? <p className="mt-1 text-muted-foreground">Resolved from {merchantUrlSourceLabel(merchantResolution.source)}: {merchantResolution.origin} · <a className="text-primary hover:underline" href={merchantResolution.origin} rel="noreferrer" target="_blank">Visit merchant</a></p> : <p className="mt-1 text-muted-foreground">Checkout unavailable until a verified merchant URL is found.</p>}
+          {merchantResolution ? (
+            <p className="mt-1 text-muted-foreground">
+              Resolved from {merchantUrlSourceLabel(merchantResolution.source)}:{" "}
+              {merchantResolution.origin} ·{" "}
+              <a
+                className="text-primary hover:underline"
+                href={merchantResolution.origin}
+              rel="noopener noreferrer"
+                target="_blank"
+              >
+                Visit merchant
+              </a>
+            </p>
+          ) : (
+            <p className="mt-1 text-muted-foreground">
+              Checkout unavailable until a verified merchant URL is found.
+            </p>
+          )}
         </div>
         <button
           aria-expanded={open}

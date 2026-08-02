@@ -37,6 +37,7 @@ export function ShoppingInput({
         <textarea
           aria-label="Shopping request"
           className="min-h-32 w-full resize-none rounded-2xl border border-border bg-background/70 p-4 pr-12 text-base outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/15"
+          id="shopping-request"
           onChange={(event) => setValue(event.target.value)}
           placeholder="What are you looking for today?"
           value={value}

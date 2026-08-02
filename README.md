@@ -1,114 +1,157 @@
-# TrustLane — The Trust Layer for Agentic Commerce
+# TrustLane
 
-TrustLane is an AI shopping workspace that makes agentic commerce reviewable. It researches a request, evaluates options and merchants, exposes its reasoning in a Decision Ledger, and requires human approval before Prava Sandbox checkout.
+## The Trust Layer for Agentic Commerce
 
-## The problem and solution
+TrustLane is an AI-assisted shopping workspace that verifies merchants, explains recommendations, requires explicit human approval, completes secure hosted checkout through Prava, and preserves an auditable commerce trail.
 
-Shopping agents can find products quickly, but users still need to know why a product won, whether a merchant is safe, what was rejected, and what happens when an agent is allowed to spend. TrustLane turns that uncertainty into a visible, auditable decision trail.
+[![Live Demo](https://img.shields.io/badge/Live_Demo-TrustLane-14b8a6?style=for-the-badge)](https://trustlane-pi.vercel.app)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/chyokore/Trustlane)
+[![YouTube Demo](https://img.shields.io/badge/YouTube-Demo-ff0000?style=for-the-badge&logo=youtube)](https://youtube.com/shorts/5hE6shioASE?si=ImZffbwxoQxjtCG8)
 
-A single OpenAI Responses API call produces structured intent, research, merchant, risk, comparison, and decision data. The user reviews that evidence, explicitly approves the recommendation, and completes sandbox checkout through Prava’s secure embedded flow.
+## Problem
 
-### Why TrustLane is different
+AI can find products and initiate purchases quickly, but trustworthy commerce requires more than speed. Users need evidence that a merchant is legitimate, a transparent explanation of why one option was selected, explicit control before money moves, secure payment handling, and an auditable record of the outcome.
 
-- Trust is a product surface, not hidden model behavior.
-- The Decision Ledger explains recommendations before approval.
-- Trust Replay preserves the journey from request to payment outcome.
-- Prava keeps card collection inside a secure iframe; TrustLane never handles raw card data.
+## Solution
 
-## Core workflow
+TrustLane creates a reviewable trust layer around AI-assisted purchasing. It gathers evidence, verifies merchants with Senso, evaluates risk and policy constraints, produces a transparent Decision Ledger, pauses for human approval, redirects to Prava Hosted Checkout, and records authentic payment lifecycle states for post-purchase verification and replay.
 
-User Request → Intent Extraction → Product Research → Merchant Verification → Risk Analysis → Product Comparison → Decision Ledger → Human Approval → Prava Sandbox Checkout → Trust Receipt → Trust Replay
-
-## Key features
-
-- AI shopping assistant
-- Single-call OpenAI orchestration
-- Merchant trust analysis and risk scoring
-- Transparent Decision Ledger
-- Explicit human approval
-- Prava embedded checkout
-- Trust Receipt and Trust Replay
-- Guest-friendly dashboard
-- Language and currency selectors
-
-## Architecture
+## Core Workflow
 
 ```mermaid
 flowchart LR
-  user["User Request"] --> workspace["Next.js Shop Workspace"]
-  workspace --> research["/api/research"]
-  research --> openai["OpenAI Responses API"]
-  openai --> pipeline["Trust Pipeline<br/>Intent · Research · Merchant · Risk · Comparison"]
-  pipeline --> senso["Senso Verified Context"]
-  senso --> ledger["Decision Ledger"]
-  ledger --> approval["User Approval"]
-  approval --> session["/api/prava/create-session"]
-  session --> checkout["Prava Secure Embedded Checkout"]
-  checkout --> receipt["Trust Receipt"]
-  receipt --> replay["Trust Replay"]
-  receipt --> feedback["Senso Outcome Feedback<br/>after confirmed success"]
+    U["User Request"] --> I["Intent Extraction"]
+    I --> R["AI Research"]
+    R --> V["Merchant Verification"]
+    V --> K["Risk & Policy Review"]
+    K --> D["Decision Ledger"]
+    D --> A["Explicit Human Approval"]
+    A --> P["Prava Hosted Checkout"]
+    P --> C["TrustLane Callback"]
+    C --> O["Order Attempt"]
+    O --> T["Trust Replay"]
+    T --> X["Verification Center"]
 ```
 
-| Layer | Technology |
+## Product Capabilities
+
+- Structured shopping intent extraction and AI research using the OpenAI Responses API
+- Senso-backed merchant verification and visible evidence sources
+- Risk, policy, warranty, return, and trade-off review
+- A Decision Ledger explaining the selected recommendation
+- Explicit human approval before checkout
+- Prava Hosted Checkout with server-side session creation
+- Authentic `pending`, `awaiting_result`, `completed`, and `failed` states
+- Persistent order attempts, downloadable receipt JSON, and Trust Replay
+- Merchant Passport and Verification Center for auditability
+
+## Payment Lifecycle Integrity
+
+TrustLane never fabricates payment success. A hosted session or successful cardholder authorization is not treated as a completed purchase.
+
+| Prava state | TrustLane state | Meaning |
+| --- | --- | --- |
+| `pending` | Sandbox Pending | Secure checkout is still processing |
+| `awaiting_result` | Authorized / Awaiting Merchant Execution | Authorization is complete; merchant execution is not final |
+| `completed` | Completed | Payment and merchant execution completed |
+| `failed` | Failed | Checkout reached a terminal failure |
+
+Only `completed` produces a successful Trust Receipt and confirmed Senso outcome record.
+
+## Architecture
+
+| Layer | Technology and responsibility |
 | --- | --- |
-| Application | Next.js 15, TypeScript, Tailwind CSS |
-| AI | OpenAI Responses API, typed server-side orchestration |
-| Payments | Prava Sandbox, `@prava-sdk/core` |
-| Delivery | Vercel deployment and Next.js server-side API routes |
-| Checkout UI | Client-side Prava iframe mounting; secret key remains server-only |
+| Web application | Next.js 15 App Router, React 19, TypeScript, Tailwind CSS |
+| AI orchestration | OpenAI Responses API with structured server-side output |
+| Merchant trust | Senso verification context and evidence |
+| Payments | Prava Hosted Checkout and server-side result polling |
+| Audit layer | Decision Ledger, order attempts, receipt JSON, Trust Replay |
+| Persistence | Safe browser-local metadata; no card data, API keys, or session credentials |
+| Deployment | Vercel |
 
-## Environment variables
+Sensitive provider credentials remain server-side. TrustLane does not store card numbers, CVV values, OTPs, passkey information, API keys, or one-time payment credentials.
 
-Create `.env.local`; never commit secrets.
+## Application Routes
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Product overview and judge entry point |
+| `/dashboard` | TrustLane dashboard |
+| `/dashboard/shop` | Research, recommendation, approval, and hosted checkout |
+| `/dashboard/agents` | Agent workflow overview |
+| `/dashboard/decision-ledger` | Recommendation reasoning and trade-offs |
+| `/dashboard/orders` | Persistent checkout attempts and lifecycle states |
+| `/dashboard/saved` | Saved research products |
+| `/dashboard/settings` | Local preferences |
+| `/dashboard/verify` | Merchant Passport, evidence, replay, and receipts |
+| `/dashboard/checkout/complete` | Hosted checkout callback reconciliation |
+| `/docs` | In-app technical documentation |
+
+## Local Development
+
+### Prerequisites
+
+- Node.js 20 or newer
+- npm
+- Sandbox credentials for the integrations you intend to exercise
+
+### Setup
+
+```bash
+git clone https://github.com/chyokore/Trustlane.git
+cd Trustlane
+npm install
+```
+
+Create `.env.local` and provide the required credentials. Never commit this file.
 
 ```env
 OPENAI_API_KEY=
 OPENAI_MODEL=
+SENSO_API_KEY=
 PRAVA_SECRET_KEY=
 NEXT_PUBLIC_PRAVA_PUBLISHABLE_KEY=
 NEXT_PUBLIC_APP_URL=https://trustlane-pi.vercel.app
-SENSO_API_KEY=
 ```
 
-## Local setup
+Start the development server:
 
 ```bash
-npm install
-# Create .env.local and add required values
 npm run dev
 ```
 
-Routes to test: `/`, `/dashboard`, `/dashboard/shop`, `POST /api/research`, and `POST /api/prava/create-session`.
+Production validation:
 
-## Judge demo flow
+```bash
+npx tsc --noEmit
+npm run lint
+npm run build
+```
 
-1. Open `/dashboard/shop` and enter a natural-language shopping request.
-2. Show the agent timeline, intent, product comparison, and merchant/risk evidence.
-3. Open the Decision Ledger to explain the recommendation.
-4. Select **Approve Purchase** to show human control and Prava embedded checkout.
-5. After a Prava success callback, show the Trust Receipt and **View Replay**.
+These static commands do not create a Prava session or transaction.
 
-## Current Prava Sandbox note
+## Judge Demo
 
-The sandbox integration supports session creation, order creation, embedded checkout loading, and Prava dashboard reporting. TrustLane only labels a payment successful when Prava returns a success callback; it does not invent a successful payment.
+1. Open the [live application](https://trustlane-pi.vercel.app) and continue to the shopping workspace.
+2. Enter a natural-language product request and review the structured intent.
+3. Inspect researched products, merchant evidence, risk signals, and the Decision Ledger.
+4. Confirm that checkout requires explicit approval and a genuine customer email.
+5. Continue to Prava Hosted Checkout using the assigned sandbox card.
+6. Return through the callback and inspect the authentic lifecycle state in Orders.
+7. Open Verification Center to review the Merchant Passport, Trust Replay, evidence, and receipt JSON.
 
-Visa/FIDO iframe initialization is currently being tested as a sandbox or environment constraint, including Cloudflare-related conditions. Failures and cancellations remain visible, and retry is always explicit.
+No real funds move in sandbox mode. Do not describe `awaiting_result` as a completed payment.
 
-## Documentation
+## Documentation and Public Links
 
+- [Live application](https://trustlane-pi.vercel.app)
+- [YouTube demo](https://youtube.com/shorts/5hE6shioASE?si=ImZffbwxoQxjtCG8)
 - [Judge demo script](docs/demo-script.md)
 - [Submission summary](docs/submission-summary.md)
+- [Privacy policy](https://trustlane-pi.vercel.app/privacy)
+- [Terms](https://trustlane-pi.vercel.app/terms)
 
-## Verification Guide
+## Hackathon Submission
 
-TrustLane exposes a reviewable proof trail for every shopping run. Open the [Live Demo](/dashboard/shop), then use [TrustLane Verify](/dashboard/verify) to inspect the Merchant Passport, Senso-returned verification sources, Decision Ledger preview, Replay Engine, and downloadable Receipt JSON for each recorded order attempt. Receipt JSON represents the local sandbox attempt state and never claims payment completion unless Prava returned a success callback.
-
-Public verification links:
-
-- [Live Demo](/dashboard/shop)
-- [Verification Center](/dashboard/verify)
-- [Merchant Passport](/dashboard/verify#passport)
-- [Replay Engine](/dashboard/verify#replay)
-- [Receipt JSON](/dashboard/verify#receipt-json)
-- [Architecture](/#architecture)
-- [Documentation](/docs)
+TrustLane was built for the Agentic Commerce Hackathon to demonstrate that autonomous commerce can remain evidence-driven, human-controlled, secure, and auditable from request through final outcome.
