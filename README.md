@@ -1,12 +1,67 @@
 # TrustLane
 
-## The Trust Layer for Agentic Commerce
+### The Trust Layer for Agentic Commerce
+
+Research → Verify → Explain → Approve → Pay → Prove
 
 TrustLane is an AI-assisted shopping workspace that verifies merchants, explains recommendations, requires explicit human approval, completes secure hosted checkout through Prava, and preserves an auditable commerce trail.
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-TrustLane-14b8a6?style=for-the-badge)](https://trustlane-pi.vercel.app)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/chyokore/Trustlane)
-[![YouTube Demo](https://img.shields.io/badge/YouTube-Demo-ff0000?style=for-the-badge&logo=youtube)](https://youtube.com/shorts/5hE6shioASE?si=ImZffbwxoQxjtCG8)
+[Try TrustLane](https://trustlane-pi.vercel.app) · [Watch the Demo](https://youtube.com/shorts/5hE6shioASE?si=ImZffbwxoQxjtCG8) · [Verify the Evidence](https://trustlane-pi.vercel.app/evidence) · [Review the Source](https://github.com/chyokore/Trustlane)
+
+## Verify TrustLane in 90 Seconds
+
+- [Live App](https://trustlane-pi.vercel.app)
+- [Demo Video](https://youtube.com/shorts/5hE6shioASE?si=ImZffbwxoQxjtCG8)
+- [Public Evidence Pack](https://trustlane-pi.vercel.app/evidence)
+- [Latest Research](https://trustlane-pi.vercel.app/demo-data/latest-research.json)
+- [Decision Ledger](https://trustlane-pi.vercel.app/demo-data/latest-decision-ledger.json)
+- [Agent Execution Log](https://trustlane-pi.vercel.app/demo-data/agent-execution-log.json)
+- [Order Attempt](https://trustlane-pi.vercel.app/demo-data/latest-order-attempt.json)
+- [Verification Lifecycle](https://trustlane-pi.vercel.app/demo-data/verification-lifecycle.json)
+- [Trust Replay](https://trustlane-pi.vercel.app/demo-data/trust-replay.json)
+- [Merchant Passport](https://trustlane-pi.vercel.app/demo-data/merchant-passport.json)
+- [GitHub Source](https://github.com/chyokore/Trustlane)
+
+1. Open the Evidence Pack.
+2. Review AI research and merchant verification.
+3. Inspect the ranked Decision Ledger.
+4. Confirm explicit human approval before checkout.
+5. Review the Prava sandbox order state.
+6. Inspect Verification Lifecycle and Trust Replay.
+7. Compare public artifacts with the source code.
+
+| Proof | Status | Public Artifact |
+| --- | --- | --- |
+| AI research | Verified demo record | latest-research.json |
+| Merchant verification | Structured evidence | merchant-passport.json |
+| Transparent reasoning | Decision Ledger | latest-decision-ledger.json |
+| Human approval | Recorded | trust-replay.json |
+| Prava Hosted Checkout | Sandbox execution | latest-order-attempt.json |
+| Payment completion | Not inferred | latest-order-attempt.json |
+| Verification timeline | Recorded | verification-lifecycle.json |
+| Cross-device demo | Supported | README guest-data section |
+
+> Publication status: the public pack is generated from a genuine sanitized browser export. Its recorded Prava state is `Authorized / Awaiting Merchant Execution`; payment completion is not inferred.
+
+## What Is Real
+
+- Live OpenAI orchestration
+- Integrated Senso merchant context
+- Genuine Prava sandbox hosted checkout
+- OTP/passkey authorization
+- Callback handling
+- Recorded order attempts
+- Recorded verification lifecycle
+- An offline public-artifact pipeline designed for a genuine exported demo journey
+
+## What Is Not Claimed
+
+- No real funds moved
+- No inferred payment completion
+- `Authorized / Awaiting Merchant Execution` is not treated as completed
+- Curated merchant origins are not represented as Senso verification
+- No sensitive payment credentials are published
+- Guest browser history is not globally synchronized without export/import
 
 ## Problem
 

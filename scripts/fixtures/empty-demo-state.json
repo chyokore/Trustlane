@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "exportedAt": "2026-08-02T00:00:00.000Z",
+  "researchSnapshots": [],
+  "decisionLedger": [],
+  "orderAttempts": [],
+  "verificationEvents": [],
+  "merchantPassport": [],
+  "savedItems": [],
+  "preferences": {
+    "language": "English",
+    "currency": "USD",
+    "notifications": true,
+    "approvalRequired": true,
+    "reducedMotion": false
+  }
+}

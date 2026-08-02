@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-02T15:37:16.738Z",
+  "project": "TrustLane",
+  "environment": "Prava Sandbox",
+  "source": "derived from latest research snapshot",
+  "data": {
+    "ledgerId": "DL-84-78",
+    "selectedProduct": "Amazon Essentials Men's Lightweight Water-Resistant Packable Jacket",
+    "selectedMerchant": "Amazon",
+    "recommendation": "The Amazon Essentials lightweight water-resistant packable jacket is the recommended illustrative option because it most consistently fits the under-$50 constraint while offering practical everyday use and relatively low purchase friction.",
+    "trustScore": 84,
+    "confidence": 78,
+    "rankedReasons": [
+      {
+        "productName": "Amazon Essentials Men's Lightweight Water-Resistant Packable Jacket",
+        "rank": 1,
+        "reason": "Best overall value for the under-$50 brief: commonly priced below budget, practical for light rain/wind, and low-risk if bought through a return-eligible listing."
+      },
+      {
+        "productName": "Old Navy Water-Resistant Hooded Jacket",
+        "rank": 2,
+        "reason": "Strong choice if style and a hood matter more than packability; however, staying under $50 may depend on sales or promotions."
+      },
+      {
+        "productName": "Target Goodfellow & Co Lightweight Bomber or Utility Jacket",
+        "rank": 3,
+        "reason": "Good convenience and casual styling, but it may sit closest to the $50 ceiling and is less weather-focused than the top option."
+      }
+    ],
+    "tradeOffs": "Choosing a sub-$50 jacket favors affordability and convenience over heavy insulation, premium materials, or technical waterproofing.",
+    "alternatives": "Old Navy was not selected first because pricing can depend on promotions. Target was not selected first because many options are more style-focused and may be less weather-resistant or close to the budget cap.",
+    "riskSummary": "Overall risk is low if buying from a mainstream retailer and confirming seller, size chart, return eligibility, and final price before checkout. The main risk is that jackets under $50 tend to be lightweight and may not provide serious warmth or weather protection.",
+    "policySummary": [
+      "Price below $50",
+      "General-purpose jacket",
+      "Good value",
+      "Low purchase risk",
+      "Clear return policy preferred"
+    ],
+    "checkoutEligibility": true,
+    "evidenceReferences": [
+      "latest-research.json",
+      "merchant-passport.json"
+    ],
+    "generatedAt": "2026-08-02T15:25:29.743Z"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-02T15:37:16.738Z",
+  "project": "TrustLane",
+  "environment": "Prava Sandbox",
+  "source": "sanitized hosted checkout attempt",
+  "data": {
+    "actor": {
+      "type": "anonymous_guest",
+      "label": "Hackathon demo user"
+    },
+    "attemptId": "hosted-ses_01KZ1DXD7CP05EMKYFSNMGQQJD",
+    "orderId": "ord_01KZ1DXD7CP05EMKYFSNMGQQJE",
+    "sessionId": "ses_…QQJD",
+    "checkoutMode": "hosted",
+    "merchant": "Amazon",
+    "product": "Amazon Essentials Men's Lightweight Water-Resistant Packable Jacket",
+    "amount": "Approx. $32–$45",
+    "currency": "USD",
+    "provider": "Prava",
+    "environment": "sandbox",
+    "providerStatus": "Authorized / Awaiting Merchant Execution",
+    "trustLaneStatus": "Authorized / Awaiting Merchant Execution",
+    "createdAt": "2026-08-02T14:26:42.214Z",
+    "updatedAt": "2026-08-02T14:28:07.224Z",
+    "lifecycleEvents": [
+      {
+        "type": "hosted_opened",
+        "label": "Hosted checkout opened",
+        "timestamp": "2026-08-02T14:26:42.214Z"
+      },
+      {
+        "type": "authorization_completed",
+        "label": "Prava authorization completed",
+        "timestamp": "2026-08-02T14:28:07.224Z"
+      },
+      {
+        "type": "merchant_execution_pending",
+        "label": "Merchant execution pending",
+        "timestamp": "2026-08-02T14:28:07.224Z"
+      }
+    ],
+    "completionInferred": false
+  }
+}

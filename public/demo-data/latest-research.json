@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-02T15:37:16.738Z",
+  "project": "TrustLane",
+  "environment": "Prava Sandbox",
+  "source": "sanitized TrustLane demo-state export",
+  "data": {
+    "actor": {
+      "type": "anonymous_guest",
+      "label": "Hackathon demo user"
+    },
+    "request": {
+      "product": "Jacket",
+      "budget": "Under 50",
+      "currency": "USD",
+      "language": "English",
+      "shippingDestination": "Assumed United States",
+      "warrantyRequired": false,
+      "merchantPreference": "No preference stated; prioritize reputable mainstream retailers and easy returns",
+      "requirements": [
+        "Price below $50",
+        "General-purpose jacket",
+        "Good value",
+        "Low purchase risk",
+        "Clear return policy preferred"
+      ]
+    },
+    "selectedProduct": {
+      "name": "Amazon Essentials Men's Lightweight Water-Resistant Packable Jacket",
+      "merchant": "Amazon",
+      "price": "Approx. $32–$45",
+      "trustScore": 84,
+      "warranty": "Standard retailer/manufacturer coverage may apply; not treated as a dedicated long warranty",
+      "returns": "Typically returnable within retailer return window if sold by Amazon or eligible seller",
+      "shipping": "Often eligible for standard or Prime-style shipping depending on account and seller",
+      "delivery": "Estimated 2–7 days depending on location and fulfillment method",
+      "risk": "Low",
+      "pros": [
+        "Usually comfortably under $50",
+        "Lightweight and packable",
+        "Good for wind and light rain",
+        "Broad size availability is common for basics",
+        "Easy-return retailer model lowers risk"
+      ],
+      "cons": [
+        "Not suitable for heavy winter warmth",
+        "Materials and fit may feel basic",
+        "Listing seller and return eligibility should be confirmed before purchase"
+      ]
+    },
+    "trustScore": 84,
+    "confidence": 78,
+    "researchSummary": {
+      "productsCompared": 3,
+      "verifiedMerchants": 3,
+      "rejectedMerchants": 2,
+      "estimatedSavings": "Illustratively $10–$30 versus mid-range casual jackets priced around $60–$80",
+      "timeSpent": "Illustrative research pass; no live browsing or inventory verification performed",
+      "products": [
+        {
+          "name": "Amazon Essentials Men's Lightweight Water-Resistant Packable Jacket",
+          "merchant": "Amazon",
+          "price": "Approx. $32–$45",
+          "trustScore": 84,
+          "warranty": "Standard retailer/manufacturer coverage may apply; not treated as a dedicated long warranty",
+          "returns": "Typically returnable within retailer return window if sold by Amazon or eligible seller",
+          "shipping": "Often eligible for standard or Prime-style shipping depending on account and seller",
+          "delivery": "Estimated 2–7 days depending on location and fulfillment method",
+          "risk": "Low",
+          "pros": [
+            "Usually comfortably under $50",
+            "Lightweight and packable",
+            "Good for wind and light rain",
+            "Broad size availability is common for basics",
+            "Easy-return retailer model lowers risk"
+          ],
+          "cons": [
+            "Not ideal for heavy winter cold",
+            "Fit and material feel may be basic",
+            "Seller details should be checked before purchase"
+          ]
+        },
+        {
+          "name": "Old Navy Water-Resistant Hooded Jacket",
+          "merchant": "Old Navy",
+          "price": "Approx. $35–$50 during common promotions",
+          "trustScore": 82,
+          "warranty": "No major extended warranty expected; standard defect handling and return policy likely apply",
+          "returns": "Retailer return window commonly available; in-store returns may be possible depending on location",
+          "shipping": "Standard shipping or store pickup may be available depending on area",
+          "delivery": "Estimated 3–8 days if shipped; pickup timing varies",
+          "risk": "Low",
+          "pros": [
+            "Often discounted below $50",
+            "Casual everyday styling",
+            "Hood adds utility",
+            "Known apparel retailer with physical-store return options in many areas"
+          ],
+          "cons": [
+            "Final price may depend on promotion timing",
+            "Some sizes/colors may exceed budget",
+            "Water resistance is usually light-duty, not storm-grade"
+          ]
+        },
+        {
+          "name": "Target Goodfellow & Co Lightweight Bomber or Utility Jacket",
+          "merchant": "Target",
+          "price": "Approx. $40–$50",
+          "trustScore": 80,
+          "warranty": "Standard retailer return/defect handling; no dedicated long-term warranty assumed",
+          "returns": "Generally straightforward retailer returns if eligible and within policy window",
+          "shipping": "Standard shipping, pickup, or local delivery may be available depending on ZIP code",
+          "delivery": "Estimated same-day pickup to 2–7 days depending on fulfillment",
+          "risk": "Low",
+          "pros": [
+            "Usually at or near the $50 cap",
+            "Easy casual styling",
+            "Convenient pickup/return options in many locations",
+            "Good balance of price and accessibility"
+          ],
+          "cons": [
+            "May be less technical than outdoor jackets",
+            "Warmth level may be limited",
+            "Inventory and color selection can vary"
+          ]
+        }
+      ]
+    },
+    "comparisonSummary": {
+      "ranking": [
+        {
+          "productName": "Amazon Essentials Men's Lightweight Water-Resistant Packable Jacket",
+          "rank": 1,
+          "reason": "Best overall value for the under-$50 brief: commonly priced below budget, practical for light rain/wind, and low-risk if bought through a return-eligible listing."
+        },
+        {
+          "productName": "Old Navy Water-Resistant Hooded Jacket",
+          "rank": 2,
+          "reason": "Strong choice if style and a hood matter more than packability; however, staying under $50 may depend on sales or promotions."
+        },
+        {
+          "productName": "Target Goodfellow & Co Lightweight Bomber or Utility Jacket",
+          "rank": 3,
+          "reason": "Good convenience and casual styling, but it may sit closest to the $50 ceiling and is less weather-focused than the top option."
+        }
+      ]
+    },
+    "riskFindings": {
+      "summary": "Overall risk is low if buying from a mainstream retailer and confirming seller, size chart, return eligibility, and final price before checkout. The main risk is that jackets under $50 tend to be lightweight and may not provide serious warmth or weather protection.",
+      "flaggedRisks": [
+        "Budget jackets may be thin and unsuitable for winter conditions",
+        "Promotional pricing may be required to stay under $50 for some options",
+        "Marketplace listings can vary by seller; return eligibility should be checked",
+        "Sizing inconsistency is common in low-cost apparel",
+        "Water-resistant does not mean waterproof"
+      ],
+      "overallRisk": "Low"
+    },
+    "policyFindings": {
+      "warrantyRequired": false,
+      "merchantPreference": "No preference stated; prioritize reputable mainstream retailers and easy returns",
+      "requirements": [
+        "Price below $50",
+        "General-purpose jacket",
+        "Good value",
+        "Low purchase risk",
+        "Clear return policy preferred"
+      ]
+    },
+    "merchantAnalysis": {
+      "summary": "The illustrative merchants are mainstream retailers with recognizable return processes and lower transaction risk than unknown marketplace storefronts. No live verification, inventory check, or current policy confirmation was performed.",
+      "verified": [
+        "Amazon — acceptable if the listing is sold by Amazon or a highly rated eligible seller with clear returns",
+        "Old Navy — established apparel retailer with familiar sizing, promotions, and return pathways",
+        "Target — established retailer with accessible pickup/return options in many areas"
+      ],
+      "rejected": [
+        "Unknown marketplace seller offering a branded jacket far below typical price — higher counterfeit and return-risk concerns",
+        "No-name fashion site advertising heavy discounts with unclear address, limited contact details, or vague return terms"
+      ]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-02T15:37:16.738Z",
+  "project": "TrustLane",
+  "environment": "Prava Sandbox",
+  "source": "sanitized stored merchant context",
+  "data": {
+    "merchant": "Amazon",
+    "publicOrigin": null,
+    "verificationStatus": "verified",
+    "summary": "No results found for your query.",
+    "evidenceUrls": [],
+    "citations": []
+  }
+}
