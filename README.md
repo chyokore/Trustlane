@@ -19,18 +19,38 @@ TrustLane creates a reviewable trust layer around AI-assisted purchasing. It gat
 ## Core Workflow
 
 ```mermaid
-flowchart LR
-    U["User Request"] --> I["Intent Extraction"]
-    I --> R["AI Research"]
-    R --> V["Merchant Verification"]
-    V --> K["Risk & Policy Review"]
-    K --> D["Decision Ledger"]
-    D --> A["Explicit Human Approval"]
-    A --> P["Prava Hosted Checkout"]
-    P --> C["TrustLane Callback"]
-    C --> O["Order Attempt"]
-    O --> T["Trust Replay"]
-    T --> X["Verification Center"]
+flowchart TB
+    subgraph S1["1. Discover"]
+        U["User Request"]
+        I["Intent Extraction"]
+        R["AI Research"]
+        U --> I --> R
+    end
+
+    subgraph S2["2. Verify & Decide"]
+        M["Merchant Verification"]
+        K["Risk and Policy Review"]
+        D["Decision Ledger"]
+        A["Explicit Human Approval"]
+        M --> K --> D --> A
+    end
+
+    subgraph S3["3. Pay"]
+        P["Prava Hosted Checkout"]
+        C["TrustLane Callback"]
+        O["Order Attempt"]
+        P --> C --> O
+    end
+
+    subgraph S4["4. Prove"]
+        T["Trust Replay"]
+        V["Verification Center"]
+        T --> V
+    end
+
+    R --> M
+    A --> P
+    O --> T
 ```
 
 ## Product Capabilities
